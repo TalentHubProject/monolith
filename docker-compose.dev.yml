@@ -8,6 +8,7 @@ services:
       dockerfile: dev.Dockerfile
     ports:
       - "5000:5106"
+    restart: unless-stopped
     volumes:
       - ./talent-hub-api:/app
     networks:
@@ -34,6 +35,19 @@ services:
       - .env
     ports:
       - "5432:5432"
+    networks:
+      - th-dev_net
+
+  web:
+    build:
+      context: talent-hub_website
+      dockerfile: dev.Dockerfile
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./talent-hub_website:/app
+      - /app/node_modules
     networks:
       - th-dev_net
 
