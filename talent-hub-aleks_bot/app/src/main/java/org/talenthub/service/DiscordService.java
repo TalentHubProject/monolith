@@ -6,24 +6,32 @@ import net.dv8tion.jda.api.hooks.EventListener;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.MemberCachePolicy;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
-import org.talenthub.Main;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.List;
 
 @Service
 public class DiscordService {
 
     @Autowired
-    public DiscordService(List<EventListener> listeners, ConfigService configService) throws FileNotFoundException {
+    public DiscordService(
+            List<EventListener> listeners,
+            ConfigService configService) throws FileNotFoundException, IOException {
 
-        configService.load(new File(Main.getArgs()[0]));
+        final var configFile = new ClassPathResource("config.json").getFile();
+        configService.load(configFile);
 
-        Dotenv dotenv = Dotenv.load();
-        JDABuilder.createLight(dotenv.get("TOKEN"),
+        final var token = System.getenv("TOKEN");
+        if (token == null) {
+            throw new FileNotFoundException("TOKEN environment variable not found");
+        }
+
+        JDABuilder.createLight(token,
                         GatewayIntent.MESSAGE_CONTENT,
                         GatewayIntent.GUILD_MESSAGES,
                         GatewayIntent.GUILD_MEMBERS,
