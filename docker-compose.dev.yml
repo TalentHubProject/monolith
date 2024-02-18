@@ -1,0 +1,30 @@
+version: "3.8"
+name: th-monolith_dev
+
+services:
+  api:
+    build:
+      context: talent-hub-api
+      dockerfile: dev.Dockerfile
+    ports:
+      - "5000:5106"
+    volumes:
+      - ./talent-hub-api:/app
+    networks:
+      - th-dev_net
+
+  bot:
+    build:
+      context: talent-hub-aleks_bot
+      dockerfile: dev.Dockerfile
+    ports:
+      - "5001:5107"
+    volumes:
+      - ./talent-hub-aleks_bot:/app
+    networks:
+      - th-dev_net
+
+
+networks:
+  th-dev_net:
+    driver: bridge
