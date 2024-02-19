@@ -66,7 +66,7 @@ docker-compose -f docker-compose.dev.yml up -d
 
 ## Contributing
 
-We encourage contributions to the Talent Hub Monolith project! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for more information on how to contribute.
+We encourage contributions to the Talent Hub Monolith project! Please see [CONTRIBUTING.md](.github/CONTRIBUTING.md) for more information on how to contribute.
 
 ## License
 
