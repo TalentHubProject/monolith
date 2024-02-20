@@ -4,7 +4,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-import org.talenthub.module.xp.persistence.Level;
+import org.talenthub.module.xp.entity.Level;
 
 import java.util.Optional;
 

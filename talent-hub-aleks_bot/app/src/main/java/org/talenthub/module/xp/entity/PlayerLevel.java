@@ -1,4 +1,4 @@
-package org.talenthub.module.xp.persistence;
+package org.talenthub.module.xp.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -22,9 +22,13 @@ public class PlayerLevel {
     @Setter
     private long xp;
 
-    public PlayerLevel(long discordId, Level level){
+    @Column
+    private int raceId;
+
+    public PlayerLevel(long discordId, Level level, final int raceId){
         this.discordId = discordId;
         this.level = level;
         this.xp = 0;
+        this.raceId = raceId;
     }
 }

@@ -14,8 +14,14 @@ export default defineNuxtConfig({
         download: true,
         inject: true
       }
-    }]
+    }],
+    'shadcn-nuxt',
+    'nuxt-lucide-icons'
   ],
+  shadcn: {
+    prefix: '',
+    componentDir: './components/ui'
+  },
   tailwindcss: {
     configPath: '../tailwind.config.js'
   }
