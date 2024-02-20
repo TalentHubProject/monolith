@@ -1,9 +1,14 @@
 {
   "version": 2,
-  "routes": [
-    {
-      "src": "/(.*)",
-      "dest": "/"
+  "builds": [{
+    "src": "talent-hub_website/nuxt.config.js",
+    "use": "@nuxtjs/vercel-builder",
+    "config": {
+      "serverFiles": ["talent-hub_website/.nuxt/dist/**"]
     }
+  }],
+  "routes": [
+    { "handle": "filesystem" },
+    { "src": "/(.*)", "dest": "talent-hub_website/.nuxt/dist/$1" }
   ]
 }
