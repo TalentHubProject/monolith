@@ -73,4 +73,6 @@ We encourage contributions to the Talent Hub Monolith project! Please see [CONTR
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for more details.
 
 ## Contributors
-![Contributors](https://contrib.rocks/image?repo=TalentHubProject/monolith)
+<a href="https://github.com/talenthubproject/monolith/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=talenthubproject/monolith" />
+</a>
