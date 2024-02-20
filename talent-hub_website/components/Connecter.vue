@@ -9,12 +9,23 @@
                 </Avatar>
             </DropdownMenuTrigger>
             <DropdownMenuContent>
-                <DropdownMenuLabel>{{user.username}}</DropdownMenuLabel>
+                <DropdownMenuLabel>
+                    <span class="flex flex-col">
+                        <span class="font-bold">{{user.username}}</span>
+                        <span class="text-gray-400 font-thin">{{user.email}}</span>
+                    </span>
+                </DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem>Profile</DropdownMenuItem>
-                <DropdownMenuItem>Billing</DropdownMenuItem>
-                <DropdownMenuItem>Team</DropdownMenuItem>
-                <DropdownMenuItem>Subscription</DropdownMenuItem>
+                <DropdownMenuItem>
+                    <NuxtLink to="/profile" class="flex items-center gap-x-2 text-gray-500 hover:text-gray-600">
+                        <span>Profile</span>
+                    </NuxtLink>
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                    <button @click="clear" class="flex items-center gap-x-2 text-red-500 hover:text-red-600">
+                        <span>Se déconnecter</span>
+                    </button>
+                </DropdownMenuItem>
             </DropdownMenuContent>
         </DropdownMenu>
         <a v-else
@@ -78,7 +89,7 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 
-const {loggedIn, user, session, clear} = useUserSession()
+const {loggedIn, user, session, clear, logout} = useUserSession()
 const isMouseOver = ref(false)
 
 const refElement = ref(null)
