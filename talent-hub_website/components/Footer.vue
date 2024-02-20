@@ -25,13 +25,13 @@
                             <h2 class="mb-6 text-xl font-semibold text-gray-900 truncate mt-16 sm:mt-0">Accueil</h2>
                             <ul class="text-gray-500 dark:text-gray-400 font-medium">
                                 <li class="mb-8 sm:mb-4 ">
-                                    <a href="https://flowbite.com/" class="hover:underline ">Blog</a>
+                                    <a href="#" class="hover:underline ">Blog</a>
                                 </li>
                                 <li class="mb-8 sm:mb-4 ">
-                                    <a href="https://tailwindcss.com/" class="hover:underline">Offres CSS</a>
+                                    <a href="#" class="hover:underline">Offres CSS</a>
                                 </li>
                                 <li>
-                                    <a href="https://tailwindcss.com/" class="hover:underline">Trombinoscope</a>
+                                    <a href="#" class="hover:underline">Trombinoscope</a>
                                 </li>
                             </ul>
                         </div>
@@ -40,13 +40,13 @@
                                 Contactez-nous</h2>
                             <ul class="text-gray-500 dark:text-gray-400 font-medium">
                                 <li class="mb-8 sm:mb-4">
-                                    <a href="https://github.com/themesberg/flowbite" class="hover:underline ">Instagram</a>
+                                    <a href="#" class="hover:underline ">Instagram</a>
                                 </li>
                                 <li class="mb-8 sm:mb-4">
-                                    <a href="https://discord.gg/4eeurUVvTy" class="hover:underline">Facebook</a>
+                                    <a href="#" class="hover:underline">Facebook</a>
                                 </li>
                                 <li>
-                                    <a href="https://discord.gg/4eeurUVvTy" class="hover:underline">Twitter</a>
+                                    <a href="#" class="hover:underline">Twitter</a>
                                 </li>
                             </ul>
                         </div>
