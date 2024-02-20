@@ -20,7 +20,6 @@ export default defineNuxtConfig({
     'nuxt-lucide-icons',
     'nuxt-auth-utils'
   ],
-
   shadcn: {
     prefix: '',
     componentDir: './components/ui'
