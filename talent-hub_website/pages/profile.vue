@@ -1,5 +1,7 @@
 <template>
-    <p>
-        Salut mecs
-    </p>
 </template>
+<script lang="ts" setup>
+definePageMeta({
+    middleware: 'auth'
+})
+</script>
