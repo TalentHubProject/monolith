@@ -1,14 +1,16 @@
-<script setup lang="ts"></script>
 
 <template>
   <div >
-    
+
    <Navbar/>
        <slot />
     <Footer/>
   </div>
 </template>
 <script>
+
+import './assets/css/main.css'
+
 export default {
   data() {
     return {

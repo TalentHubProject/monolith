@@ -1,11 +1,12 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   devtools: { enabled: true },
+  ssr: true,
   css: [
     "/assets/css/main.css"
   ],
   modules: [
-    ['nuxt-swiper'],
+    'nuxt-swiper',
     '@nuxtjs/tailwindcss',
     ['@nuxtjs/google-fonts', {
       families: {
@@ -16,13 +17,16 @@ export default defineNuxtConfig({
       }
     }],
     'shadcn-nuxt',
-    'nuxt-lucide-icons'
+    'nuxt-lucide-icons',
+    'nuxt-auth-utils'
   ],
+
   shadcn: {
     prefix: '',
     componentDir: './components/ui'
   },
   tailwindcss: {
-    configPath: '../tailwind.config.js'
+    configPath: '/tailwind.config.js',
+    cssPath: '/assets/css/main.css',
   }
 })

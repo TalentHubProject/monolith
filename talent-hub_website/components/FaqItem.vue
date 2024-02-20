@@ -4,13 +4,13 @@
     >
         <div class="flex items-center justify-between space-x-4 px-4">
             <CollapsibleTrigger as-child>
-                <Button class="flex items-center justify-between w-full space-x-2">
+                <button class="flex items-center justify-between w-full space-x-2">
                     <h4 class="text-2xl font-bold mr-2 text-left">
                         {{ props.title }}
                     </h4>
                     <LucideChevronsUpDown class="h-4 w-4"/>
                     <span class="sr-only">Toggle</span>
-                </Button>
+                </button>
             </CollapsibleTrigger>
         </div>
         <CollapsibleContent class="space-y-2">
