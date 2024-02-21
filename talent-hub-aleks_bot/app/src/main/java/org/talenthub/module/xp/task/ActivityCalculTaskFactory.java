@@ -1,6 +1,5 @@
 package org.talenthub.module.xp.task;
 
-import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import net.dv8tion.jda.api.entities.Guild;
 import org.springframework.beans.factory.annotation.Autowired;
