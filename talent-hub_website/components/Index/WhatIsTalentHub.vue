@@ -4,7 +4,7 @@
 
 <template>
     <section class="mt-8 pb-8 md:mt-32">
-        <div class="border-2 border-blue-500 m-3 rounded-xl">
+        <div class="border border-[#DC888C] m-3 rounded-xl">
             <div class="pt-16 px-4 mx-auto max-w-screen-xl text-center">
                 <div class="flex justify-center">
                     <div class="flex items-center bg-slate-200 px-4 py-1 rounded text-slate-700">
