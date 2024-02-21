@@ -10,6 +10,9 @@
       "role-id": "",
       "value": 1.5
     }
-  ]
+  ],
+
+  "auto-voc-channel-id": "",
+  "auto-voc-category-id": ""
 
 }
