@@ -3,6 +3,16 @@
   "color-code": "#E05880",
 
   "first-level-xp": 100,
-  "wish-welcome-gain-xp": 10
+  "wish-welcome-gain-xp": 10,
+
+  "boost-role-xp": [
+    {
+      "role-id": "",
+      "value": 1.5
+    }
+  ],
+
+  "auto-voc-channel-id": "",
+  "auto-voc-category-id": ""
 
 }

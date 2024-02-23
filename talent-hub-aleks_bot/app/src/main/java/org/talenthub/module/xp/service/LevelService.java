@@ -1,5 +1,6 @@
 package org.talenthub.module.xp.service;
 
+import com.google.gson.JsonElement;
 import lombok.AllArgsConstructor;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.channel.middleman.GuildMessageChannel;
@@ -25,6 +26,7 @@ public class LevelService {
         PlayerLevel playerLevel = playerLevelService.getPlayerLevel(member.getIdLong());
 
         long xpToAdd = ActivityCalculTask.getInstance().isBoostActivated() ? xp * 2 : xp;
+        xpToAdd = getBoostedXp(member, xpToAdd);
 
         playerLevel.setXp(playerLevel.getXp() + xpToAdd);
 
@@ -67,6 +69,24 @@ public class LevelService {
         levelRepository.save(newLevel);
         return newLevel;
     }
+
+    private long getBoostedXp(Member member, final long xp) {
+        int maxBoostValue = 1;
+
+        for (JsonElement boost : configService.getJsonArray("boost-role-xp")) {
+            String roleId = boost.getAsJsonObject().get("role-id").getAsString();
+
+            if (member.getRoles().stream().anyMatch(role -> role.getId().equals(roleId))) {
+                int boostValue = boost.getAsJsonObject().get("value").getAsInt();
+                if (boostValue > maxBoostValue) {
+                    maxBoostValue = boostValue;
+                }
+            }
+        }
+
+        return xp * maxBoostValue;
+    }
+
 
 
 
