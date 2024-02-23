@@ -22,16 +22,16 @@
                     </div>
                     <div class="grid grid-cols-1 gap-8 sm:gap-20 sm:grid-cols-3 pb-16">
                         <div>
-                            <h2 class="mb-6 text-xl font-semibold text-gray-900 truncate mt-16 sm:mt-0">Accueil</h2>
+                            <h2 class="mb-6 text-xl font-semibold text-gray-900 truncate mt-16 sm:mt-0">Routes</h2>
                             <ul class="text-gray-500 dark:text-gray-400 font-medium">
                                 <li class="mb-8 sm:mb-4 ">
-                                    <a href="#" class="hover:underline ">Blog</a>
+                                    <a href="/" target="_blank" class="hover:underline">Acceuil</a>
                                 </li>
                                 <li class="mb-8 sm:mb-4 ">
-                                    <a href="#" class="hover:underline">Offres CSS</a>
+                                    <a href="https://discord.talent-hub.fr" target="_blank" class="hover:underline">Discord</a>
                                 </li>
                                 <li>
-                                    <a href="#" class="hover:underline">Trombinoscope</a>
+                                    <a href="/trombinoscope" target="_blank" class="hover:underline">Trombinoscope</a>
                                 </li>
                             </ul>
                         </div>
@@ -40,13 +40,13 @@
                                 Contactez-nous</h2>
                             <ul class="text-gray-500 dark:text-gray-400 font-medium">
                                 <li class="mb-8 sm:mb-4">
-                                    <a href="#" class="hover:underline ">Instagram</a>
+                                    <a href="https://www.instagram.com/talenthubfr/" target="_blank" class="hover:underline ">Instagram</a>
                                 </li>
                                 <li class="mb-8 sm:mb-4">
-                                    <a href="#" class="hover:underline">Facebook</a>
+                                    <a href="https://www.linkedin.com/company/93809895" target="_blank" class="hover:underline">LinkedIn</a>
                                 </li>
                                 <li>
-                                    <a href="#" class="hover:underline">Twitter</a>
+                                    <a href="https://twitter.com/talenthubfr" target="_blank" class="hover:underline">Twitter</a>
                                 </li>
                             </ul>
                         </div>
@@ -61,7 +61,7 @@
                 <hr class="my-6 border-slate-200 sm:mx-auto lg:my-8" />
                 <div class="my-16 sm:my-0 sm:flex sm:items-center sm:justify-between">
                     <span class="text-sm text-gray-500 sm:text-center dark:text-gray-400">
-                       Développé par <a href="https://agdl.dev" class="underline">Alexis C. Gridel | Ecrin Digital</a> 
+                       Développé par <a href="https://agdl.dev" target="_blank" class="underline">Alexis C. Gridel | Ecrin Digital</a>
                         © Copyright 2023, Talent Hub.
                     </span>
 
