@@ -10,14 +10,14 @@
         <div class="hidden md:block">
           <ul class="flex space-x-2 text-sm bg-slate-100 px-1 py-2 rounded">
             <li>
-              <NuxtLink to="/" active-class="exactActiveClass" class="px-2 hoverClass">Blog
+              <NuxtLink to="/" active-class="exactActiveClass" class="px-2 hoverClass">Accueil
               </NuxtLink>
             </li>
             <li>
-                <NuxtLink to="/events" active-class="exactActiveClass " class="px-2 hoverClass">Événements</NuxtLink>
+                <NuxtLink to="/events" active-class="exactActiveClass " class="px-2 hoverClass">Événements (à venir)</NuxtLink>
             </li>
             <li>
-              <NuxtLink to="/starboard" active-class="exactActiveClass" class="px-2 hoverClass">Starboard
+              <NuxtLink to="/starboard" active-class="exactActiveClass" class="px-2 hoverClass">Starboard (à venir)
               </NuxtLink>
             </li>
           </ul>

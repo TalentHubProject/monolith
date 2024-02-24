@@ -31,7 +31,7 @@
                                     <a href="https://discord.talent-hub.fr" target="_blank" class="hover:underline">Discord</a>
                                 </li>
                                 <li>
-                                    <a href="/trombinoscope" target="_blank" class="hover:underline">Trombinoscope</a>
+                                    <a href="/starboard" target="_blank" class="hover:underline">Starboard</a>
                                 </li>
                             </ul>
                         </div>
