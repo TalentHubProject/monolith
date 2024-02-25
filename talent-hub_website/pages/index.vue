@@ -84,6 +84,13 @@
                         Tu es écrivain.ne ou fan de ce domaine? Tu es au bon endroit !
                     </p>
                 </div>
+              <div class="mx-8 md:mx-0 border border-white rounded-md text-white hover:text-black hover:bg-white transition duration-500 ease-in-out">
+                <img class="ml-auto" src="~/assets/images/reading-side.png"/>
+                <h3 class="pl-4 text-sm font-bold">Dessin</h3>
+                <p class="ml-4 w-60 pb-4 font-normal text-sm">
+                  Tu es dessinateur.se ou fan de ce domaine? Tu es au bon endroit !
+                </p>
+              </div>
             </div>
         </div>
     </section>
