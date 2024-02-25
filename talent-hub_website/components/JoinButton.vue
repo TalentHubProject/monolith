@@ -1,19 +1,5 @@
-<!-- <script setup lang="ts">
-const props = defineProps({
-  text: {
-    type: String,
-    required: true,
-  },
-});
-const { text } = props;
-const data = () => ({
-  isMouseOver: false
-}); -->
-
-<!-- </script> -->
-
 <template>
-  <a href="https://discord.talent-hub.fr" target="_blank" rel="noreferrer noopener">
+  <a href="https://discord.gg/pWuYR6SYVF" target="_blank" rel="noreferrer noopener">
     <button @mouseover="isMouseOver = true" @mouseout="isMouseOver = false"
       class="bg-transparent  text-[#E05880] text-sm font-medium hover:text-white py-2 px-4 border border-[#E05880] hover:border-transparent rounded transition duration-300 ease-in-out"
       :class="isMouseOver ? 'red-fill' : ''">
