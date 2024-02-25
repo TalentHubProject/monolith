@@ -166,17 +166,12 @@
 </template>
 
 
-<script>
-export default {
-    data() {
-        return {
-            isMouseOver: false,
-            isMouseOver1: false,
-            isMouseOver2: false,
-            isMouseOver3: false,
-        };
-    }
-};
+<script setup lang="ts">
+const router = useRouter()
+
+
+alert('You are being redirected to the home page')
+router.push('/');
 </script>
 
 
