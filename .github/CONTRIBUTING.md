@@ -37,11 +37,11 @@ If you encounter any issues or have suggestions for improvements, please open a 
 We encourage you to join the Talent Hub community and get involved! You can find us on:
 
 <p align="center">
- <a href="https://discord.talent-hub.fr">
+ <a href="https://discord.gg/pWuYR6SYVF">
    <img src="https://img.shields.io/discord/1057360697887051806?color=5865F2&label=Discord&logo=discord&logoColor=white&style=for-the-badge" alt="Discord server">
  </a>
 </p>
 
-Join our [Discord server](https://discord.talent-hub.fr) to connect with other contributors, ask questions, and stay up-to-date with the latest developments in the Talent Hub Monolith project.
+Join our [Discord server](https://discord.gg/pWuYR6SYVF) to connect with other contributors, ask questions, and stay up-to-date with the latest developments in the Talent Hub Monolith project.
 
 Thank you for your contributions!

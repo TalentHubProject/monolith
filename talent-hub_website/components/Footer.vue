@@ -28,7 +28,7 @@
                                     <a href="/" target="_blank" class="hover:underline">Acceuil</a>
                                 </li>
                                 <li class="mb-8 sm:mb-4 ">
-                                    <a href="https://discord.talent-hub.fr" target="_blank" class="hover:underline">Discord</a>
+                                    <a href="https://discord.gg/pWuYR6SYVF" target="_blank" class="hover:underline">Discord</a>
                                 </li>
                                 <li>
                                     <a href="/starboard" target="_blank" class="hover:underline">Starboard</a>
