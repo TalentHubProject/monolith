@@ -28,4 +28,8 @@ definePageMeta({
 })
 
 const {user} = useUserSession()
+const router = useRouter()
+
+alert('You are being redirected to the home page')
+router.push('/');
 </script>

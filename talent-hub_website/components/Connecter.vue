@@ -18,7 +18,7 @@
                 <DropdownMenuSeparator />
                 <DropdownMenuItem>
                     <NuxtLink to="/profile" class="flex items-center gap-x-2 text-gray-500 hover:text-gray-600">
-                        <span>Profile</span>
+                        <span>Profile (à venir)</span>
                     </NuxtLink>
                 </DropdownMenuItem>
                 <DropdownMenuItem>
