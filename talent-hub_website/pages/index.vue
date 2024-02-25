@@ -3,7 +3,7 @@
         <section class="">
             <div class="mt-16 lg:mt-40 2xl:mt-64 pt-32 px-2 mx-auto max-w-screen-lg text-center lg:pt-16 lg:px-12">
                 <h1 class="mb-8 text-5xl font-extrabold tracking-tight leading-none md:mb-16 lg:text-6xl text-[#1E1E1E]">
-                    Talent Hub Collaboration et créativité
+                    Talent Hub <br />Collaboration et créativité
                 </h1>
                 <p class="text-lg font-normal text-gray-500 lg:text-xl sm:px-16 xl:px-48 dark:text-gray-400">
                     Réunissant passionnés d'art, de développement, de musique et bien
