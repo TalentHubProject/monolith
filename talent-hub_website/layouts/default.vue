@@ -21,6 +21,14 @@ export default {
     toggleMenu() {
       this.isMenuHidden = !this.isMenuHidden;
     }
+  },
+  setup() {
+    useSeoMeta({
+      title: 'Talent Hub',
+      description: 'Réunissant passionnés d\'art, de développement, de musique et bien plus encore',
+      image: 'https://talenthub.fr/assets/images/og.png',
+      url: 'https://talenthub.fr'
+    })
   }
 };
 </script>
