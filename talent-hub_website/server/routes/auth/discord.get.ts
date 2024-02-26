@@ -3,6 +3,7 @@ export default oauth.discordEventHandler({
 
         await setUserSession(event, {
             user: {
+                id: user.id,
                 username: user.username,
                 email: user.email,
                 avatar: `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png`,
