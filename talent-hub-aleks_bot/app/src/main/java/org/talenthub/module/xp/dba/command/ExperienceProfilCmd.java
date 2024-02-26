@@ -19,7 +19,7 @@ import org.talenthub.module.xp.service.api.CreatureAPIService;
 import java.io.File;
 
 @Command(name = "experience-profil", description = "Command to get the experience profil of a user")
-@Option(type = OptionType.USER, name = "user", description = "The user to get the experience profil")
+@Option(type = OptionType.USER, name = "member", description = "The user to get the experience profil")
 @Component
 @AllArgsConstructor
 public class ExperienceProfilCmd implements DBACommand {
