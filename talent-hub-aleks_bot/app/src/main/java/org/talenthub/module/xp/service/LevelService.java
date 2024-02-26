@@ -25,7 +25,9 @@ public class LevelService {
 
         PlayerLevel playerLevel = playerLevelService.getPlayerLevel(member.getIdLong());
 
-        long xpToAdd = ActivityCalculTask.getInstance().isBoostActivated() ? xp * 2 : xp;
+        //long xpToAdd = ActivityCalculTask.getInstance().isBoostActivated() ? xp * 2 : xp;
+        //xpToAdd = getBoostedXp(member, xpToAdd);
+        long xpToAdd = xp;
         xpToAdd = getBoostedXp(member, xpToAdd);
 
         playerLevel.setXp(playerLevel.getXp() + xpToAdd);
