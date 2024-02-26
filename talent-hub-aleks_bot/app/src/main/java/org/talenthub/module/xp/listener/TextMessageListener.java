@@ -19,7 +19,7 @@ public class TextMessageListener extends ListenerAdapter {
         if(event.getAuthor().isBot()) return;
         if(!event.getChannelType().equals(ChannelType.TEXT)) return;
 
-        int xpEarned = event.getMessage().getContentRaw().length();
+        int xpEarned = event.getMessage().getContentRaw().split(" ").length;
 
         levelService.addXp(event.getChannel().asTextChannel(), event.getMember(), xpEarned);
 
