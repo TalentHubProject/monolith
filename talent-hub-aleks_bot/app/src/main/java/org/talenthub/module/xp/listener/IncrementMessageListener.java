@@ -15,6 +15,6 @@ public class IncrementMessageListener extends ListenerAdapter {
         if(event.getAuthor().isBot()) return;
         if(!event.getChannelType().equals(ChannelType.TEXT)) return;
 
-        ActivityCalculTask.getInstance().incrementMessage();
+        //ActivityCalculTask.getInstance().incrementMessage();
     }
 }
