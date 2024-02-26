@@ -46,7 +46,7 @@ public class LevelService {
 
     private Level levelUp(final PlayerLevel playerLevel){
 
-        Level newlevel = levelRepository.findNextLevelByMaxXp(playerLevel.getXp()).orElse(createNewlevel(playerLevel.getLevel()));
+        Level newlevel = levelRepository.findNextLevelByMaxXp(playerLevel.getXp()).orElse(createNewLevels(playerLevel.getXp(), playerLevel.getLevel()));
         playerLevel.setLevel(newlevel);
 
         playerLevelService.updatePlayerLevel(playerLevel);
@@ -66,11 +66,21 @@ public class LevelService {
         }
     }
 
-    private Level createNewlevel(Level level){
-        Level newLevel = new Level(level.getId() + 1, (long) (level.getMaxXp() * 1.2));
-        levelRepository.save(newLevel);
-        return newLevel;
+    private Level createNewLevels(long targetXp, Level level) {
+        long currentXp = level.getMaxXp();
+        int currentLevel = level.getId();
+
+        while (currentXp < targetXp) {
+            currentLevel++;
+            currentXp *= (long) 1.2;
+            Level newLevel = new Level(currentLevel, currentXp);
+            levelRepository.save(newLevel);
+            level = newLevel;
+        }
+
+        return level;
     }
+
 
     private long getBoostedXp(Member member, final long xp) {
         int maxBoostValue = 1;
