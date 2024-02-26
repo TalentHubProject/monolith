@@ -37,7 +37,7 @@ public class CreatureAPIService {
 
     public File getCreatureImage(final int raceId, final int levelId) {
         Request request = new Request.Builder()
-                .url(BASE_URL + "/creatures/" + raceId + "/" + levelId)
+                .url(BASE_URL + "/creatures/" + levelId + "/" + raceId)
                 .get()
                 .build();
 
