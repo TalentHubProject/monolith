@@ -36,7 +36,7 @@ services:
     ports:
       - "5439:5432"
     volumes:
-      - bot_postgres:/var/lib/postgresql/data
+      - ./bot_postgres:/var/lib/postgresql/data
     networks:
       - th-dev_net
 
