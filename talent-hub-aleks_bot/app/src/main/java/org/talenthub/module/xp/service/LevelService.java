@@ -34,30 +34,32 @@ public class LevelService {
         }
 
         PlayerLevel playerLevel = playerLevelService.getPlayerLevel(member.getIdLong());
-        long xpToAdd = getBoostedXp(member, xp);
-        playerLevel.setXp(playerLevel.getXp() + xpToAdd);
+        long newXp = playerLevel.getXp() + getBoostedXp(member, xp);
 
-        boolean leveledUp = false;
+        playerLevel.setXp(newXp);
+        LOGGER.info("Added XP to member with ID {}. New XP: {}", member.getId(), newXp);
+
         while (true) {
-            Optional<Level> nextLevel = levelRepository.findNextLevelByMaxXp(playerLevel.getXp());
-            if (nextLevel.isPresent() && playerLevel.getLevel().getId() < nextLevel.get().getId()) {
-                leveledUp = true;
-                playerLevel.setLevel(nextLevel.get());
+            Optional<Level> nextLevelOpt = levelRepository.findNextLevelByMaxXp(newXp);
+            if (nextLevelOpt.isPresent() && playerLevel.getLevel().getId() < nextLevelOpt.get().getId()) {
+                newXp -= nextLevelOpt.get().getMaxXp();
+                playerLevel.setLevel(nextLevelOpt.get());
                 playerLevelService.updatePlayerLevel(playerLevel);
+                broadcastLevelUpMessage(channel, member, nextLevelOpt.get());
                 LOGGER.info("Member with ID {} leveled up to {}", member.getId(), playerLevel.getLevel().getId());
+                if (newXp < 0) {
+                    LOGGER.error("Unexpected negative XP for member with ID {}. Resetting to 0.", member.getId());
+                    newXp = 0;
+                    playerLevel.setXp(newXp);
+                    playerLevelService.updatePlayerLevel(playerLevel);
+                    break;
+                }
             } else {
                 break;
             }
         }
-
-        if (leveledUp) {
-            broadcastLevelUpMessage(channel, member, playerLevel.getLevel());
-        }
-
-        if (!leveledUp) {
-            playerLevelService.updatePlayerLevel(playerLevel);
-        }
     }
+
 
     public void checkAndGenerateFirstLevel() {
         if (levelRepository.count() == 0) {
