@@ -4,12 +4,14 @@
 
    <Navbar/>
        <slot />
+      <SpeedInsights />
     <Footer/>
   </div>
 </template>
 <script>
 
 import './assets/css/main.css'
+import { SpeedInsights } from "@vercel/speed-insights/nuxt"
 
 export default {
   data() {

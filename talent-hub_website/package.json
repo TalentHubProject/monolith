@@ -28,6 +28,7 @@
     "@nuxtjs/robots": "^3.0.0",
     "@nuxtjs/sitemap": "^5.1.1",
     "@nuxtjs/web-vitals": "^0.2.6",
+    "@vercel/speed-insights": "^1.0.10",
     "autoprefixer": "^10.4.17",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
