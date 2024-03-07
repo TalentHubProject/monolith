@@ -59,6 +59,15 @@ public class LevelService {
         }
     }
 
+    public void checkAndGenerateFirstLevel() {
+        if (levelRepository.count() == 0) {
+            int maxXp = configService.getInt("first-level-xp");
+            Level level = new Level(1, maxXp);
+            levelRepository.save(level);
+            LOGGER.info("First level created with max XP: {}", maxXp);
+        }
+    }
+
     private void broadcastLevelUpMessage(GuildMessageChannel channel, Member member, Level level) {
         messageBroadcasterService.broadcastBasicMessageEmbed(channel,
                 String.format("Congratulations **%s**! You have reached level %d!", member.getEffectiveName(), level.getId()));
