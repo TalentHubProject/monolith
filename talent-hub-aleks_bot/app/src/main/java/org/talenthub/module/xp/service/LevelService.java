@@ -36,9 +36,20 @@ public class LevelService {
         PlayerLevel playerLevel = playerLevelService.getPlayerLevel(member.getIdLong());
         long newXp = calculateNewXp(playerLevel, xp, member);
 
-        updatePlayerXp(playerLevel, newXp);
+        while (true) {
+            updatePlayerXp(playerLevel, newXp);
 
-        handleLevelUp(channel, member, playerLevel);
+            Optional<Level> nextLevelOpt = levelRepository.findNextLevelByMaxXp(newXp);
+            if (nextLevelOpt.isPresent() && playerLevel.getLevel().getId() < nextLevelOpt.get().getId()) {
+                playerLevel.setLevel(nextLevelOpt.get());
+                playerLevelService.updatePlayerLevel(playerLevel);
+                broadcastLevelUpMessage(channel, member, nextLevelOpt.get());
+                newXp -= nextLevelOpt.get().getMaxXp();
+                if (newXp < 0) break;
+            } else {
+                break;
+            }
+        }
     }
 
     private long calculateNewXp(PlayerLevel playerLevel, long xp, Member member) {
@@ -52,19 +63,9 @@ public class LevelService {
         playerLevelService.updatePlayerLevel(playerLevel);
     }
 
-    private void handleLevelUp(GuildMessageChannel channel, Member member, PlayerLevel playerLevel) {
-        Optional<Level> nextLevelOpt = levelRepository.findNextLevelByMaxXp(playerLevel.getXp());
-        nextLevelOpt.ifPresent(nextLevel -> {
-            if (playerLevel.getLevel().getId() < nextLevel.getId()) {
-                playerLevel.setLevel(nextLevel);
-                playerLevelService.updatePlayerLevel(playerLevel);
-                broadcastLevelUpMessage(channel, member, nextLevel);
-            }
-        });
-    }
-
     private void broadcastLevelUpMessage(GuildMessageChannel channel, Member member, Level nextLevel) {
-        messageBroadcasterService.broadcastBasicMessageEmbed(channel, String.format("Congratulations **%s**! You have reached level %d!", member.getEffectiveName(), nextLevel.getId()));
+        messageBroadcasterService.broadcastBasicMessageEmbed(channel,
+                String.format("Congratulations **%s**! You have reached level %d!", member.getEffectiveName(), nextLevel.getId()));
         LOGGER.info("Member with ID {} has leveled up to {}", member.getId(), nextLevel.getId());
     }
 
