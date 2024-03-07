@@ -38,6 +38,7 @@ public class DiscordService {
                         GatewayIntent.GUILD_VOICE_STATES,
                         GatewayIntent.GUILD_PRESENCES)
                 .addEventListeners(listeners.toArray())
+                .setMaxReconnectDelay(32)
                 .setMemberCachePolicy(MemberCachePolicy.ALL)
                 .enableCache(CacheFlag.VOICE_STATE)
                 .build();
