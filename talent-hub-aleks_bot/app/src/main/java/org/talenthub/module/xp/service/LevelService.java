@@ -50,7 +50,7 @@ public class LevelService {
 
     private Level levelUp(final PlayerLevel playerLevel){
 
-        Level newlevel = levelRepository.findNextLevelByMaxXp(playerLevel.getXp()).orElse(createNewLevels(playerLevel.getXp(), playerLevel.getLevel()));
+        Level newlevel = levelRepository.findNextLevelByMaxXp(playerLevel.getXp()).orElseGet(() -> createNewLevels(playerLevel.getXp(), playerLevel.getLevel()));
         playerLevel.setLevel(newlevel);
 
         playerLevelService.updatePlayerLevel(playerLevel);
