@@ -133,18 +133,28 @@
     </section>
 </template>
 
-<script>
+<script setup lang="ts">
 import WhatIsTalentHub from "~/components/Index/WhatIsTalentHub.vue";
 import Faq from "~/components/Index/Faq.vue";
+import {useFetch} from "nuxt/app";
 
-export default {
-    components: {Faq, WhatIsTalentHub},
-    data() {
-        return {
-            isMouseOver: false,
-        };
-    },
-};
+
+let isMouseOver = false;
+
+const { data: randomRace } = await useFetch(`http://45.140.165.84:5000/api/v1/randomRace`, {
+    server: true,
+});
+
+console.log("Data", randomRace.value);
+
+if (process.server) {
+    // Code exécuté uniquement côté serveur
+    console.log("Je suis exécuté côté serveur");
+} else if (process.client) {
+    // Code exécuté uniquement côté client
+    console.log("Je suis exécuté côté client");
+}
+
 </script>
 
 <style scoped>

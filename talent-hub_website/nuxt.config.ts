@@ -5,6 +5,7 @@ export default defineNuxtConfig({
     "/assets/css/main.css"
   ],
   modules: [
+      '@nuxtjs/sitemap',
     'nuxt-swiper',
     '@nuxtjs/tailwindcss',
     ['@nuxtjs/google-fonts', {
