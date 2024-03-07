@@ -1,6 +1,8 @@
 package org.talenthub.module.xp.service;
 
 import lombok.AllArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.talenthub.module.xp.entity.Level;
 import org.talenthub.module.xp.entity.PlayerLevel;
@@ -18,12 +20,14 @@ public class PlayerLevelService {
     private final PlayerLevelRepository playerLevelRepository;
     private final LevelRepository levelRepository;
     private final CreatureAPIService creatureAPIService;
+    private final Logger LOGGER = LoggerFactory.getLogger(PlayerLevelService.class);
 
     public PlayerLevel getPlayerLevel(final long discordId){
-        return playerLevelRepository.findById(discordId).orElse(createPlayerLevel(discordId));
+        return playerLevelRepository.findById(discordId).orElseGet(() ->createPlayerLevel(discordId));
     }
 
     private PlayerLevel createPlayerLevel(final long discordId){
+
 
         Optional<Level> firstLevel = levelRepository.findById(1);
 
@@ -35,6 +39,9 @@ public class PlayerLevelService {
 
         PlayerLevel playerLevel = new PlayerLevel(discordId, firstLevel.get(), raceId);
         playerLevelRepository.save(playerLevel);
+
+        LOGGER.info("PlayerLevel create : "+discordId);
+
         return playerLevel;
     }
 

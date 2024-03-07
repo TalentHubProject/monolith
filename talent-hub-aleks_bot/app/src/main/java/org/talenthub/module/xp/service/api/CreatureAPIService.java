@@ -3,6 +3,8 @@ package org.talenthub.module.xp.service.api;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
@@ -16,7 +18,10 @@ public class CreatureAPIService {
 
     private final OkHttpClient httpClient = new OkHttpClient();
 
+    private final Logger LOGGER = LoggerFactory.getLogger(CreatureAPIService.class);
+
     public int getRandomRace(){
+
         Request request = new Request.Builder()
                 .url(BASE_URL + "/randomrace")
                 .get()
@@ -36,6 +41,9 @@ public class CreatureAPIService {
     }
 
     public File getCreatureImage(final int raceId, final int levelId) {
+
+        LOGGER.info("Fetching creature image for raceId: " + raceId + " and levelId: " + levelId);
+
         Request request = new Request.Builder()
                 .url(BASE_URL + "/creatures/" + levelId + "/" + raceId)
                 .get()

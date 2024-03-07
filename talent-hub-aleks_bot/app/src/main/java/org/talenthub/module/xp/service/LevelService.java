@@ -4,6 +4,8 @@ import com.google.gson.JsonElement;
 import lombok.AllArgsConstructor;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.channel.middleman.GuildMessageChannel;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.talenthub.module.xp.entity.Level;
 import org.talenthub.module.xp.entity.PlayerLevel;
@@ -20,6 +22,7 @@ public class LevelService {
     private final LevelRepository levelRepository;
     private final MessageBroadcasterService messageBroadcasterService;
     private final ConfigService configService;
+    private final Logger LOGGER = LoggerFactory.getLogger(LevelService.class);
 
     public void addXp(final GuildMessageChannel channel, final Member member, final long xp){
 
@@ -31,6 +34,7 @@ public class LevelService {
         xpToAdd = getBoostedXp(member, xpToAdd);
 
         playerLevel.setXp(playerLevel.getXp() + xpToAdd);
+        LOGGER.info("Xp add : " + xpToAdd + " to "+member.getId());
 
         if(playerLevel.getLevel().getMaxXp() <= playerLevel.getXp()){
 
