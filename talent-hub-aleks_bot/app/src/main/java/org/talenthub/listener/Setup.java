@@ -5,7 +5,6 @@ import fr.leonarddoo.dba.loader.DBALoader;
 import net.dv8tion.jda.api.events.guild.GuildReadyEvent;
 import net.dv8tion.jda.api.events.session.ReadyEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import net.dv8tion.jda.api.interactions.commands.Command;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.talenthub.service.ConfigService;
@@ -35,15 +34,12 @@ public class Setup extends ListenerAdapter {
 
     @Override
     public void onGuildReady(GuildReadyEvent event) {
-        event.getGuild().retrieveCommands().queue(commands -> {
-            for (Command command : commands) {
-                command.delete().queue();
-            }
 
-            DBALoader.getInstance(event.getJDA()).addDBACommandsToGuild(event.getGuild(),
-                    this.commands.toArray(new Command[0])
-            );
-        });
+        event.getJDA().updateCommands().queue();
+        event.getGuild().updateCommands().queue();
+        DBALoader.getInstance(event.getJDA()).addDBACommandsToGuild(event.getGuild(),
+                this.commands.toArray()
+        );
     }
 
     @Override
