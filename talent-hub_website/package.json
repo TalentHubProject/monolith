@@ -25,6 +25,7 @@
   "dependencies": {
     "@nuxtjs/auth-next": "5.0.0-1667386184.dfbbb54",
     "@nuxtjs/axios": "^5.13.6",
+    "@nuxtjs/robots": "^3.0.0",
     "@nuxtjs/sitemap": "^5.1.1",
     "@nuxtjs/web-vitals": "^0.2.6",
     "autoprefixer": "^10.4.17",

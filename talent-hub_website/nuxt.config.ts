@@ -5,6 +5,7 @@ export default defineNuxtConfig({
     "/assets/css/main.css"
   ],
   modules: [
+      '@nuxtjs/robots'
       '@nuxtjs/sitemap',
     'nuxt-swiper',
     '@nuxtjs/tailwindcss',
