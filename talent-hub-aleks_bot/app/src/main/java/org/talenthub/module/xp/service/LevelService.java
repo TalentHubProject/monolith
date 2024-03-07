@@ -28,20 +28,22 @@ public class LevelService {
 
     @Transactional
     public void addXp(final GuildMessageChannel channel, final Member member, final long xp) {
-        PlayerLevel playerLevel = playerLevelService.getPlayerLevel(member.getIdLong());
+        if (member == null) {
+            LOGGER.error("Member is null. Cannot add XP.");
+            return;
+        }
 
+        PlayerLevel playerLevel = playerLevelService.getPlayerLevel(member.getIdLong());
         long xpToAdd = getBoostedXp(member, xp);
         playerLevel.setXp(playerLevel.getXp() + xpToAdd);
-        LOGGER.info("Xp add : " + xpToAdd + " to " + member.getId());
+        LOGGER.info("Added {} XP to member with ID {}", xpToAdd, member.getId());
 
         Optional<Level> nextLevel = levelRepository.findNextLevelByMaxXp(playerLevel.getXp());
-        if (nextLevel.isPresent()) {
-            playerLevel.setLevel(nextLevel.get());
+        nextLevel.ifPresent(level -> {
+            playerLevel.setLevel(level);
             playerLevelService.updatePlayerLevel(playerLevel);
-            messageBroadcasterService.broadcastBasicMessageEmbed(channel, "Félicitations **" + member.getEffectiveName() + "**! Tu as atteint le niveau " + nextLevel.get().getId() + "!");
-        } else {
-            playerLevelService.updatePlayerLevel(playerLevel);
-        }
+            messageBroadcasterService.broadcastBasicMessageEmbed(channel, "Congratulations **" + member.getEffectiveName() + "**! You have reached level " + level.getId() + "!");
+        });
     }
 
     public void checkAndGenerateFirstLevel() {
@@ -49,23 +51,19 @@ public class LevelService {
             int maxXp = configService.getInt("first-level-xp");
             Level level = new Level(1, maxXp);
             levelRepository.save(level);
+            LOGGER.info("First level created with max XP: {}", maxXp);
         }
     }
 
     private long getBoostedXp(Member member, final long xp) {
         int maxBoostValue = 1;
-
         for (JsonElement boost : configService.getJsonArray("boost-role-xp")) {
             String roleId = boost.getAsJsonObject().get("role-id").getAsString();
-
             if (member.getRoles().stream().anyMatch(role -> role.getId().equals(roleId))) {
                 int boostValue = boost.getAsJsonObject().get("value").getAsInt();
-                if (boostValue > maxBoostValue) {
-                    maxBoostValue = boostValue;
-                }
+                maxBoostValue = Math.max(maxBoostValue, boostValue);
             }
         }
-
         return xp * maxBoostValue;
     }
 }

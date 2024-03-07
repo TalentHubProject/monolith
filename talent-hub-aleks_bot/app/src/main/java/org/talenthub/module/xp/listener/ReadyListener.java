@@ -11,6 +11,7 @@ import org.talenthub.module.xp.service.LevelService;
 import org.talenthub.module.xp.task.ActivityCalculTask;
 import org.talenthub.module.xp.task.ActivityCalculTaskFactory;
 
+import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -24,25 +25,27 @@ public class ReadyListener extends ListenerAdapter {
 
     @Override
     public void onReady(final ReadyEvent event) {
-
-        levelService.checkAndGenerateFirsLevel();
-
+        levelService.checkAndGenerateFirstLevel();
     }
 
     @Override
     public void onGuildReady(final GuildReadyEvent event) {
-
         ActivityCalculTask activityCalculTask = new ActivityCalculTaskFactory().create(event.getGuild());
+        ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+        scheduler.scheduleAtFixedRate(activityCalculTask, 0, 1, TimeUnit.HOURS);
 
-        try (ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1)) {
-
-            scheduler.scheduleAtFixedRate(activityCalculTask, 0, 1, TimeUnit.HOURS);
-
-        }catch (Exception e){
-
-            LOGGER.error("Error while scheduling ActivityCalculTask", e);
-
-        }
-
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            try {
+                scheduler.shutdown();
+                if (!scheduler.awaitTermination(1, TimeUnit.MINUTES)) {
+                    LOGGER.error("Executor did not terminate in the specified time.");
+                    List<Runnable> droppedTasks = scheduler.shutdownNow();
+                    LOGGER.error("Executor was abruptly shut down. {} tasks will not be executed.", droppedTasks.size());
+                }
+            } catch (InterruptedException e) {
+                scheduler.shutdownNow();
+                Thread.currentThread().interrupt();
+            }
+        }));
     }
 }
