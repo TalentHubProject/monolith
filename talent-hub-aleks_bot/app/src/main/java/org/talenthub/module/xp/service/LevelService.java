@@ -34,49 +34,34 @@ public class LevelService {
         }
 
         PlayerLevel playerLevel = playerLevelService.getPlayerLevel(member.getIdLong());
-        long newXp = calculateNewXp(playerLevel, xp, member);
+        long xpToAdd = getBoostedXp(member, xp);
+        playerLevel.setXp(playerLevel.getXp() + xpToAdd);
 
+        boolean leveledUp = false;
         while (true) {
-            updatePlayerXp(playerLevel, newXp);
-
-            Optional<Level> nextLevelOpt = levelRepository.findNextLevelByMaxXp(newXp);
-            if (nextLevelOpt.isPresent() && playerLevel.getLevel().getId() < nextLevelOpt.get().getId()) {
-                playerLevel.setLevel(nextLevelOpt.get());
+            Optional<Level> nextLevel = levelRepository.findNextLevelByMaxXp(playerLevel.getXp());
+            if (nextLevel.isPresent() && playerLevel.getLevel().getId() < nextLevel.get().getId()) {
+                leveledUp = true;
+                playerLevel.setLevel(nextLevel.get());
                 playerLevelService.updatePlayerLevel(playerLevel);
-                broadcastLevelUpMessage(channel, member, nextLevelOpt.get());
-                newXp -= nextLevelOpt.get().getMaxXp();
-                if (newXp < 0) break;
+                LOGGER.info("Member with ID {} leveled up to {}", member.getId(), playerLevel.getLevel().getId());
             } else {
                 break;
             }
         }
-    }
 
-    private long calculateNewXp(PlayerLevel playerLevel, long xp, Member member) {
-        long xpToAdd = getBoostedXp(member, xp);
-        LOGGER.info("Adding {} XP to member with ID {}", xpToAdd, member.getId());
-        return playerLevel.getXp() + xpToAdd;
-    }
-
-    private void updatePlayerXp(PlayerLevel playerLevel, long newXp) {
-        playerLevel.setXp(newXp);
-        playerLevelService.updatePlayerLevel(playerLevel);
-    }
-
-    private void broadcastLevelUpMessage(GuildMessageChannel channel, Member member, Level nextLevel) {
-        messageBroadcasterService.broadcastBasicMessageEmbed(channel,
-                String.format("Congratulations **%s**! You have reached level %d!", member.getEffectiveName(), nextLevel.getId()));
-        LOGGER.info("Member with ID {} has leveled up to {}", member.getId(), nextLevel.getId());
-    }
-
-
-    public void checkAndGenerateFirstLevel() {
-        if (levelRepository.count() == 0) {
-            int maxXp = configService.getInt("first-level-xp");
-            Level level = new Level(1, maxXp);
-            levelRepository.save(level);
-            LOGGER.info("First level created with max XP: {}", maxXp);
+        if (leveledUp) {
+            broadcastLevelUpMessage(channel, member, playerLevel.getLevel());
         }
+
+        if (!leveledUp) {
+            playerLevelService.updatePlayerLevel(playerLevel);
+        }
+    }
+
+    private void broadcastLevelUpMessage(GuildMessageChannel channel, Member member, Level level) {
+        messageBroadcasterService.broadcastBasicMessageEmbed(channel,
+                String.format("Congratulations **%s**! You have reached level %d!", member.getEffectiveName(), level.getId()));
     }
 
     private long getBoostedXp(Member member, final long xp) {
@@ -91,3 +76,4 @@ public class LevelService {
         return xp * maxBoostValue;
     }
 }
+
