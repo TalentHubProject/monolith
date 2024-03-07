@@ -7,12 +7,15 @@ import net.dv8tion.jda.api.entities.channel.middleman.GuildMessageChannel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.talenthub.module.xp.entity.Level;
 import org.talenthub.module.xp.entity.PlayerLevel;
 import org.talenthub.module.xp.repository.LevelRepository;
 import org.talenthub.module.xp.task.ActivityCalculTask;
 import org.talenthub.service.ConfigService;
 import org.talenthub.service.MessageBroadcasterService;
+
+import java.beans.Transient;
 
 @Service
 @AllArgsConstructor
@@ -24,6 +27,7 @@ public class LevelService {
     private final ConfigService configService;
     private final Logger LOGGER = LoggerFactory.getLogger(LevelService.class);
 
+    @Transactional
     public void addXp(final GuildMessageChannel channel, final Member member, final long xp){
 
         PlayerLevel playerLevel = playerLevelService.getPlayerLevel(member.getIdLong());
@@ -48,6 +52,7 @@ public class LevelService {
 
     }
 
+    @Transactional
     private Level levelUp(final PlayerLevel playerLevel){
 
         Level newlevel = levelRepository.findNextLevelByMaxXp(playerLevel.getXp()).orElseGet(() -> createNewLevels(playerLevel.getXp(), playerLevel.getLevel()));

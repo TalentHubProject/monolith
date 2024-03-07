@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.talenthub.module.xp.entity.Level;
 import org.talenthub.module.xp.entity.PlayerLevel;
 import org.talenthub.module.xp.repository.LevelRepository;
@@ -22,10 +23,12 @@ public class PlayerLevelService {
     private final CreatureAPIService creatureAPIService;
     private final Logger LOGGER = LoggerFactory.getLogger(PlayerLevelService.class);
 
+    @Transactional(readOnly = true)
     public PlayerLevel getPlayerLevel(final long discordId){
         return playerLevelRepository.findById(discordId).orElseGet(() ->createPlayerLevel(discordId));
     }
 
+    @Transactional
     private PlayerLevel createPlayerLevel(final long discordId){
 
 
@@ -45,6 +48,7 @@ public class PlayerLevelService {
         return playerLevel;
     }
 
+    @Transactional
     public void updatePlayerLevel(final PlayerLevel playerLevel){
         playerLevelRepository.save(playerLevel);
     }
