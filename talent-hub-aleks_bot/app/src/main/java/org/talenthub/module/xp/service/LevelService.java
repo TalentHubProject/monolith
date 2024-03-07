@@ -39,26 +39,25 @@ public class LevelService {
         playerLevel.setXp(newXp);
         LOGGER.info("Added XP to member with ID {}. New XP: {}", member.getId(), newXp);
 
-        while (true) {
-            Optional<Level> nextLevelOpt = levelRepository.findNextLevelByMaxXp(newXp);
-            if (nextLevelOpt.isPresent() && playerLevel.getLevel().getId() < nextLevelOpt.get().getId()) {
-                newXp -= nextLevelOpt.get().getMaxXp();
+        Optional<Level> nextLevelOpt = levelRepository.findNextLevelByMaxXp(newXp);
+        while (nextLevelOpt.isPresent() && playerLevel.getLevel().getId() < nextLevelOpt.get().getId()) {
+
+            // Si le joueur a atteint un nouveau niveau
+            if (newXp >= nextLevelOpt.get().getMaxXp()) {
                 playerLevel.setLevel(nextLevelOpt.get());
                 playerLevelService.updatePlayerLevel(playerLevel);
                 broadcastLevelUpMessage(channel, member, nextLevelOpt.get());
                 LOGGER.info("Member with ID {} leveled up to {}", member.getId(), playerLevel.getLevel().getId());
-                if (newXp < 0) {
-                    LOGGER.error("Unexpected negative XP for member with ID {}. Resetting to 0.", member.getId());
-                    newXp = 0;
-                    playerLevel.setXp(newXp);
-                    playerLevelService.updatePlayerLevel(playerLevel);
-                    break;
-                }
             } else {
                 break;
             }
+
+            // Sinon, continue de vérifier si le joueur a atteint un autre niveau
+            newXp -= nextLevelOpt.get().getMaxXp();
+            nextLevelOpt = levelRepository.findNextLevelByMaxXp(newXp);
         }
     }
+
 
 
     public void checkAndGenerateFirstLevel() {
