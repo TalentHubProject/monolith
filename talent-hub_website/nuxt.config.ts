@@ -5,7 +5,6 @@ export default defineNuxtConfig({
     "/assets/css/main.css"
   ],
   modules: [
-      '@nuxtjs/robots',
       '@nuxtjs/sitemap',
     'nuxt-swiper',
     '@nuxtjs/tailwindcss',
@@ -29,4 +28,9 @@ export default defineNuxtConfig({
     configPath: '/tailwind.config.js',
     cssPath: '/assets/css/main.css',
   },
+  build: {
+    transpile: [
+        'defu'
+    ]
+  }
 })
