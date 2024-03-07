@@ -23,7 +23,7 @@ public class ExperienceLeaderboardCmd implements DBACommand {
 
     @Override
     public void execute(final SlashCommandInteractionEvent event) {
-
+        /**
         event.deferReply(true).queue();
 
         List<PlayerLevel> top10 = playerLevelRepository.findTop10ByOrderByExperienceDesc();
@@ -40,7 +40,8 @@ public class ExperienceLeaderboardCmd implements DBACommand {
                         .setColor(Color.decode(configService.getString("color-code")))
 
                 .build()).queue();
-
+**/
+        return;
 
     }
 }

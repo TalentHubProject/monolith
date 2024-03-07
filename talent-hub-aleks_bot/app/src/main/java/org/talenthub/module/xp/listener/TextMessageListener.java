@@ -20,6 +20,7 @@ public class TextMessageListener extends ListenerAdapter {
         }
 
         int xpEarned = event.getMessage().getContentRaw().split(" ").length;
-        levelService.addXp(event.getChannel().asTextChannel(), event.getMember(), xpEarned);
+        //fix(Leonarddoo): Le système de gain d'xp est à revoir
+        //levelService.addXp(event.getChannel().asTextChannel(), event.getMember(), xpEarned);
     }
 }

@@ -32,6 +32,7 @@ public class ExperienceProfilCmd implements DBACommand {
     @Override
     public void execute(final SlashCommandInteractionEvent event) {
 
+/**
         event.deferReply().queue();
 
         Member member;
@@ -58,7 +59,9 @@ public class ExperienceProfilCmd implements DBACommand {
                     .build()).queue(success ->
                         message.delete().queue());
         });
+**/
 
+    return;
 
     }
 
