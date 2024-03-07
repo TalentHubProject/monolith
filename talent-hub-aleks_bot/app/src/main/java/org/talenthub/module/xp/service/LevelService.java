@@ -16,6 +16,8 @@ import org.talenthub.service.ConfigService;
 import org.talenthub.service.MessageBroadcasterService;
 
 import java.beans.Transient;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -40,20 +42,23 @@ public class LevelService {
         playerLevel.setXp(playerLevel.getXp() + xpToAdd);
         LOGGER.info("Xp add : " + xpToAdd + " to "+member.getId());
 
-        if(playerLevel.getLevel().getMaxXp() <= playerLevel.getXp()){
-
-            Level newLevel = levelUp(playerLevel);
-
-            messageBroadcasterService.broadcastBasicMessageEmbed(channel, "Félécitation **" + member.getEffectiveName() + "**! Tu as atteint le niveau " + newLevel.getId() + "!");
-
-        }else{
+        if (playerLevel.getLevel().getMaxXp() <= playerLevel.getXp()) {
+            new Thread(() -> {
+                try {
+                    Level newLevel = levelUp(playerLevel);
+                    messageBroadcasterService.broadcastBasicMessageEmbed(channel, "Félécitation **" + member.getEffectiveName() + "**! Tu as atteint le niveau " + newLevel.getId() + "!");
+                } catch (Exception e) {
+                    LOGGER.error("Error while leveling up player: " + member.getId(), e);
+                }
+            }).start();
+        } else {
             playerLevelService.updatePlayerLevel(playerLevel);
         }
 
     }
 
     @Transactional
-    private Level levelUp(final PlayerLevel playerLevel){
+    public Level levelUp(final PlayerLevel playerLevel){
 
         Level newlevel = levelRepository.findNextLevelByMaxXp(playerLevel.getXp()).orElseGet(() -> createNewLevels(playerLevel.getXp(), playerLevel.getLevel()));
         playerLevel.setLevel(newlevel);
@@ -79,15 +84,18 @@ public class LevelService {
         long currentXp = level.getMaxXp();
         int currentLevel = level.getId();
 
+        List<Level> newLevels = new ArrayList<>();
+
         while (currentXp < targetXp) {
             currentLevel++;
             currentXp *= (long) 1.2;
             Level newLevel = new Level(currentLevel, currentXp);
-            levelRepository.save(newLevel);
-            level = newLevel;
+            newLevels.add(newLevel);
         }
 
-        return level;
+        levelRepository.saveAll(newLevels);
+
+        return newLevels.get(newLevels.size() - 1);
     }
 
 
