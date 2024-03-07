@@ -81,21 +81,23 @@ public class LevelService {
     }
 
     private Level createNewLevels(long targetXp, Level level) {
-        long currentXp = level.getMaxXp();
         int currentLevel = level.getId();
+        long currentXp = level.getMaxXp();
 
-        List<Level> newLevels = new ArrayList<>();
-
-        while (currentXp < targetXp) {
-            currentLevel++;
-            currentXp *= (long) 1.2;
-            Level newLevel = new Level(currentLevel, currentXp);
-            newLevels.add(newLevel);
+        if (targetXp <= currentXp) {
+            return level;
         }
 
-        levelRepository.saveAll(newLevels);
+        double ratio = (double) targetXp / currentXp;
+        int levelsToAdd = (int) Math.floor(Math.log(ratio) / Math.log(1.2));
 
-        return newLevels.get(newLevels.size() - 1);
+        int newLevel = currentLevel + levelsToAdd;
+        long newXp = (long) (currentXp * Math.pow(1.2, levelsToAdd));
+
+        Level createdLevel = new Level(newLevel, newXp);
+        levelRepository.save(createdLevel);
+
+        return createdLevel;
     }
 
 
