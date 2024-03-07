@@ -59,10 +59,13 @@ public class LevelService {
 
     @Transactional
     public Level levelUp(final PlayerLevel playerLevel){
+        Level newlevel = levelRepository.findNextLevelByMaxXp(playerLevel.getXp())
+                .orElseGet(() -> {
+                    Level createdLevel = createNewLevels(playerLevel.getXp(), playerLevel.getLevel());
+                    return levelRepository.save(createdLevel);
+                });
 
-        Level newlevel = levelRepository.findNextLevelByMaxXp(playerLevel.getXp()).orElseGet(() -> createNewLevels(playerLevel.getXp(), playerLevel.getLevel()));
         playerLevel.setLevel(newlevel);
-
         playerLevelService.updatePlayerLevel(playerLevel);
 
         return newlevel;
