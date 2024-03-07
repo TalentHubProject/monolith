@@ -11,13 +11,10 @@ import org.springframework.transaction.annotation.Transactional;
 import org.talenthub.module.xp.entity.Level;
 import org.talenthub.module.xp.entity.PlayerLevel;
 import org.talenthub.module.xp.repository.LevelRepository;
-import org.talenthub.module.xp.task.ActivityCalculTask;
 import org.talenthub.service.ConfigService;
 import org.talenthub.service.MessageBroadcasterService;
 
-import java.beans.Transient;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -30,79 +27,30 @@ public class LevelService {
     private final Logger LOGGER = LoggerFactory.getLogger(LevelService.class);
 
     @Transactional
-    public void addXp(final GuildMessageChannel channel, final Member member, final long xp){
-
+    public void addXp(final GuildMessageChannel channel, final Member member, final long xp) {
         PlayerLevel playerLevel = playerLevelService.getPlayerLevel(member.getIdLong());
 
-        //long xpToAdd = ActivityCalculTask.getInstance().isBoostActivated() ? xp * 2 : xp;
-        //xpToAdd = getBoostedXp(member, xpToAdd);
-        long xpToAdd = xp;
-        xpToAdd = getBoostedXp(member, xpToAdd);
-
+        long xpToAdd = getBoostedXp(member, xp);
         playerLevel.setXp(playerLevel.getXp() + xpToAdd);
-        LOGGER.info("Xp add : " + xpToAdd + " to "+member.getId());
+        LOGGER.info("Xp add : " + xpToAdd + " to " + member.getId());
 
-        if (playerLevel.getLevel().getMaxXp() <= playerLevel.getXp()) {
-            new Thread(() -> {
-                try {
-                    Level newLevel = levelUp(playerLevel);
-                    messageBroadcasterService.broadcastBasicMessageEmbed(channel, "Félécitation **" + member.getEffectiveName() + "**! Tu as atteint le niveau " + newLevel.getId() + "!");
-                } catch (Exception e) {
-                    LOGGER.error("Error while leveling up player: " + member.getId(), e);
-                }
-            }).start();
+        Optional<Level> nextLevel = levelRepository.findNextLevelByMaxXp(playerLevel.getXp());
+        if (nextLevel.isPresent()) {
+            playerLevel.setLevel(nextLevel.get());
+            playerLevelService.updatePlayerLevel(playerLevel);
+            messageBroadcasterService.broadcastBasicMessageEmbed(channel, "Félicitations **" + member.getEffectiveName() + "**! Tu as atteint le niveau " + nextLevel.get().getId() + "!");
         } else {
             playerLevelService.updatePlayerLevel(playerLevel);
         }
-
     }
 
-    @Transactional
-    public Level levelUp(final PlayerLevel playerLevel){
-        Level newlevel = levelRepository.findNextLevelByMaxXp(playerLevel.getXp())
-                .orElseGet(() -> {
-                    Level createdLevel = createNewLevels(playerLevel.getXp(), playerLevel.getLevel());
-                    return levelRepository.save(createdLevel);
-                });
-
-        playerLevel.setLevel(newlevel);
-        playerLevelService.updatePlayerLevel(playerLevel);
-
-        return newlevel;
-    }
-
-    public void checkAndGenerateFirsLevel() {
-
+    public void checkAndGenerateFirstLevel() {
         if (levelRepository.count() == 0) {
-
             int maxXp = configService.getInt("first-level-xp");
             Level level = new Level(1, maxXp);
-
             levelRepository.save(level);
-
         }
     }
-
-    private Level createNewLevels(long targetXp, Level level) {
-        int currentLevel = level.getId();
-        long currentXp = level.getMaxXp();
-
-        if (targetXp <= currentXp) {
-            return level;
-        }
-
-        double ratio = (double) targetXp / currentXp;
-        int levelsToAdd = (int) Math.floor(Math.log(ratio) / Math.log(1.2));
-
-        int newLevel = currentLevel + levelsToAdd;
-        long newXp = (long) (currentXp * Math.pow(1.2, levelsToAdd));
-
-        Level createdLevel = new Level(newLevel, newXp);
-        levelRepository.save(createdLevel);
-
-        return createdLevel;
-    }
-
 
     private long getBoostedXp(Member member, final long xp) {
         int maxBoostValue = 1;
@@ -120,8 +68,4 @@ public class LevelService {
 
         return xp * maxBoostValue;
     }
-
-
-
-
 }
