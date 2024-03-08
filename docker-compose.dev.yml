@@ -4,13 +4,13 @@ name: th-monolith_dev
 services:
   api:
     build:
-      context: talent-hub-api
-      dockerfile: dev.Dockerfile
+      context: talent-hub_api
+      dockerfile: src/main/docker/Dockerfile.dev
     ports:
-      - "5000:5106"
+      - "8080:8080"
     restart: unless-stopped
     volumes:
-      - ./talent-hub-api:/app
+      - ./talent-hub_api:/app
     networks:
       - th-dev_net
 

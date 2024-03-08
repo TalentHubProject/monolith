@@ -1,0 +1,7 @@
+FROM gradle:jdk21
+
+WORKDIR /app
+
+COPY --chown=gradle:gradle . /app
+
+CMD ["gradle", "--no-daemon", "quarkusDev", "-Dquarkus.http.host=0.0.0.0"]
