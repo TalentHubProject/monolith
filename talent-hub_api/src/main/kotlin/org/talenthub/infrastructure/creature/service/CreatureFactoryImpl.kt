@@ -10,21 +10,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package com.talenthub.myfabulouscreatures.infrastructure
+package org.talenthub.infrastructure.creature.service
 
 import io.smallrye.mutiny.Uni
 import jakarta.enterprise.context.ApplicationScoped
 import jakarta.inject.Inject
-import jakarta.ws.rs.core.Response
 import org.jboss.logging.Logger
-import org.talenthub.infrastructure.creature.service.CreatureFactory
-import java.io.File
-import java.nio.file.Files
-import java.util.*
 
 @ApplicationScoped
 class CreatureFactoryService @Inject constructor(
-    private val logger: Logger
+    private val _logger: Logger
 ) : CreatureFactory {
 
     companion object {
@@ -40,16 +35,16 @@ class CreatureFactoryService @Inject constructor(
         private const val MAX_CREATURE_INDEX = 3
     }
 
-    override fun createCreature(level: Int, raceId: Int): Uni<Response> {
+    override fun createCreature(level: Int, raceId: Int): Uni<ByteArray> {
         val imagePath = generateImagePath(level, raceId)
         return Uni.createFrom().item {
-            val imageFile = File(imagePath)
-            if (imageFile.exists()) {
-                val imageBytes = Files.readAllBytes(imageFile.toPath())
-                Response.ok(imageBytes, "image/png").build()
+            val inputStream = javaClass.getResourceAsStream(imagePath)
+
+            if (inputStream == null) {
+                _logger.error("Image not found: $imagePath")
+                ByteArray(0)
             } else {
-                logger.warn("Image not found for level $level and raceId $raceId.")
-                Response.status(Response.Status.NOT_FOUND).build()
+                inputStream.readBytes()
             }
         }
     }
@@ -68,8 +63,11 @@ class CreatureFactoryService @Inject constructor(
         }
 
         val raceName = RACE_ID_TO_NAME[raceId] ?: throw IllegalArgumentException("Invalid raceId")
+        val folderName = "${type}s"
         val imageName = "${type}_$imageIndex.png"
 
-        return "/creatures/$raceName/$imageName"
+        _logger.info("Generated image path: /META-INF/resources/$folderName/$raceName/$imageName")
+
+        return "/META-INF/resources/$folderName/$raceName/$imageName"
     }
 }
