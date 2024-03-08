@@ -34,6 +34,8 @@ public class Setup extends ListenerAdapter {
 
     @Override
     public void onGuildReady(GuildReadyEvent event) {
+
+        event.getJDA().updateCommands().queue();
         event.getGuild().updateCommands().queue();
         DBALoader.getInstance(event.getJDA()).addDBACommandsToGuild(event.getGuild(),
                 this.commands.toArray()

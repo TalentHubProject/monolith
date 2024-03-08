@@ -22,6 +22,11 @@
                     </NuxtLink>
                 </DropdownMenuItem>
                 <DropdownMenuItem>
+                  <NuxtLink to="/missions" class="flex items-center gap-x-2 text-gray-500 hover:text-gray-600">
+                    <span>Missions</span>
+                  </NuxtLink>
+                </DropdownMenuItem>
+                <DropdownMenuItem>
                     <button @click="clear" class="flex items-center gap-x-2 text-red-500 hover:text-red-600">
                         <span>Se déconnecter</span>
                     </button>

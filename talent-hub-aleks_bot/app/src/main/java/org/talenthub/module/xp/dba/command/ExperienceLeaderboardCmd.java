@@ -8,7 +8,9 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 import org.springframework.stereotype.Component;
 import org.talenthub.module.xp.entity.PlayerLevel;
 import org.talenthub.module.xp.repository.PlayerLevelRepository;
+import org.talenthub.service.ConfigService;
 
+import java.awt.*;
 import java.util.List;
 
 @Command(name = "experience-leaderboard", description = "Afficher le classement des joueurs avec le plus d'expérience")
@@ -17,10 +19,11 @@ import java.util.List;
 public class ExperienceLeaderboardCmd implements DBACommand {
 
     private final PlayerLevelRepository playerLevelRepository;
+    private final ConfigService configService;
 
     @Override
     public void execute(final SlashCommandInteractionEvent event) {
-
+        /**
         event.deferReply(true).queue();
 
         List<PlayerLevel> top10 = playerLevelRepository.findTop10ByOrderByExperienceDesc();
@@ -34,8 +37,11 @@ public class ExperienceLeaderboardCmd implements DBACommand {
                         .setTitle("Leaderboard de l'experience")
                         .setThumbnail(event.getGuild().getIconUrl())
                         .setDescription(sb.toString())
-                .build()).queue();
+                        .setColor(Color.decode(configService.getString("color-code")))
 
+                .build()).queue();
+**/
+        return;
 
     }
 }

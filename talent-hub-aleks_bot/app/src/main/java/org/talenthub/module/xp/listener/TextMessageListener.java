@@ -15,13 +15,12 @@ public class TextMessageListener extends ListenerAdapter {
 
     @Override
     public void onMessageReceived(final MessageReceivedEvent event) {
-
-        if(event.getAuthor().isBot()) return;
-        if(!event.getChannelType().equals(ChannelType.TEXT)) return;
+        if (event.getAuthor().isBot() || event.getMember() == null || !event.getChannelType().equals(ChannelType.TEXT)) {
+            return;
+        }
 
         int xpEarned = event.getMessage().getContentRaw().split(" ").length;
-
-        levelService.addXp(event.getChannel().asTextChannel(), event.getMember(), xpEarned);
-
+        //fix(Leonarddoo): Le système de gain d'xp est à revoir
+        //levelService.addXp(event.getChannel().asTextChannel(), event.getMember(), xpEarned);
     }
 }

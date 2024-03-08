@@ -52,7 +52,8 @@ public class WishWelcomeListener extends ListenerAdapter {
         }
 
         // Add the xp to the user
-        levelService.addXp(event.getChannel().asTextChannel(), event.getMember(), xpEarned);
+        //fix(Leonarddoo): Le système de gain d'xp est à revoir
+        //levelService.addXp(event.getChannel().asTextChannel(), event.getMember(), xpEarned);
 
         // Add reaction to show the user gain xp
         event.getMessage().addReaction(Emoji.fromUnicode("U+2728")).queue();

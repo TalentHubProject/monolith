@@ -44,7 +44,8 @@ public class VoicePresenceListener extends ListenerAdapter {
 
             long minutes = joined.until(left, ChronoUnit.MINUTES);
 
-            levelService.addXp(event.getChannelLeft().asVoiceChannel(), event.getEntity(), minutes);
+            //fix(Leonarddoo): Le système de gain d'xp est à revoir
+            //levelService.addXp(event.getChannelLeft().asVoiceChannel(), event.getEntity(), minutes);
 
         }
 
