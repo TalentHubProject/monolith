@@ -1,0 +1,4 @@
+quarkus.live-reload.instrumentation=true
+quarkus.mongodb.database=
+quarkus.mongodb.connection-string =
+discord.jobs.webhook=
