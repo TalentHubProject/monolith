@@ -2,18 +2,18 @@ package org.talenthub.presentation.resources
 
 import io.smallrye.mutiny.Uni
 import jakarta.inject.Inject
-import jakarta.ws.rs.GET
-import jakarta.ws.rs.Path
-import jakarta.ws.rs.PathParam
-import jakarta.ws.rs.Produces
+import jakarta.ws.rs.*
 import jakarta.ws.rs.core.MediaType
 import jakarta.ws.rs.core.Response
 import org.bson.types.ObjectId
+import org.jboss.logging.Logger
+import org.talenthub.infrastructure.persistence.entity.Mission
 import org.talenthub.infrastructure.persistence.repository.MissionRepository
 
 @Path("/missions")
 class MissionResource @Inject constructor(
     private val _missionRepository: MissionRepository,
+    private val _logger: Logger
 ) {
 
     @GET
@@ -23,7 +23,10 @@ class MissionResource @Inject constructor(
             .map { missions ->
                 Response.ok(missions).build()
             }
-            .onFailure().recoverWithItem(Response.status(Response.Status.INTERNAL_SERVER_ERROR).build())
+            .onFailure().recoverWithItem { throwable ->
+                _logger.error("Failed to retrieve missions", throwable)
+                Response.status(Response.Status.INTERNAL_SERVER_ERROR).build()
+            }
     }
 
 
@@ -47,5 +50,18 @@ class MissionResource @Inject constructor(
         } catch (e: IllegalArgumentException) {
             Uni.createFrom().item(Response.status(Response.Status.BAD_REQUEST).build())
         }
+    }
+
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    fun createMission(mission: Mission): Uni<Response> {
+        return _missionRepository.persist(mission)
+            .map { createdMission ->
+                Response.status(Response.Status.CREATED)
+                    .entity(createdMission)
+                    .build()
+            }
+            .onFailure().recoverWithItem(Response.status(Response.Status.INTERNAL_SERVER_ERROR).build())
     }
 }
