@@ -1,14 +1,13 @@
 <template>
-    <div>
-
+    <main class="flex flex-col">
         <Navbar/>
         <slot/>
         <SpeedInsights/>
         <Footer/>
-    </div>
+    </main>
 </template>
-<script>
 
+<script>
 import './assets/css/main.css'
 
 export default {
