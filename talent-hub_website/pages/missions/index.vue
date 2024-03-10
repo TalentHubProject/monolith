@@ -13,15 +13,23 @@ const apiBaseUrl = config.public.apiBaseUrl;
 async function loadJobs() {
   loading.value = true;
   try {
-    const { data: missions } = await useFetch(`${apiBaseUrl}/missions`);
+    console.log("apiBaseUrl", apiBaseUrl)
+    const {data: missions, pending, error, refresh } = await useFetch(`${apiBaseUrl}/missions`, {
+      onRequestError({ request, options, error }) {
+        console.log(error);
+      },
+    });
 
     if (missions.value) {
+      console.log("missions", missions.value)
       visibleJobs.value = missions.value;
       allJobsLoaded.value = true;
     } else {
+      console.error("no missions empty");
       visibleJobs.value = [];
     }
   } catch (error) {
+    console.error("no missions", error);
     toast.error('Une erreur est survenue lors du chargement des offres');
     visibleJobs.value = [];
   }
