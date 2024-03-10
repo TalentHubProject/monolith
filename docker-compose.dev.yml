@@ -22,7 +22,7 @@ services:
     ports:
       - "27017:27017"
     volumes:
-      - ./api_mongo:/data/db
+      - mongodb_data:/data/db
     networks:
       - th-dev_net
 
@@ -66,3 +66,6 @@ networks:
     driver: bridge
   bridge_delegate:
     external: true
+
+volumes:
+  mongodb_data:
