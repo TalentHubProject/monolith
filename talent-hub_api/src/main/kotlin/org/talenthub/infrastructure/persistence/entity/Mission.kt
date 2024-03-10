@@ -11,11 +11,12 @@ data class Mission(
     var domain: String,
     var status: String,
     var employerSnowflake: String,
+    var employerName: String,
     var createdAt: LocalDate? = LocalDate.now(),
     var updatedAt: LocalDate? = LocalDate.now(),
 
 
     ) : ReactivePanacheMongoEntity() {
     constructor()
-            : this("", "", 0, "", "", "", "", LocalDate.now(), LocalDate.now())
+            : this("", "", 0, "", "", "", "", "", LocalDate.now(), LocalDate.now())
 }
