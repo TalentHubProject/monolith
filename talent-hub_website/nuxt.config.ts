@@ -23,7 +23,9 @@ export default defineNuxtConfig({
     'nuxt-auth-utils'
   ],
   runtimeConfig: {
-    apiBaseUrl: process.env.API_BASE_URL,
+    public: {
+        apiBaseUrl: process.env.API_BASE_URL
+    }
   },
   shadcn: {
     prefix: '',

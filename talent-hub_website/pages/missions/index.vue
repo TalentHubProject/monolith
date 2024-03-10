@@ -8,7 +8,7 @@ const searchQuery = ref('');
 const selectedDomain = ref('');
 
 const config = useRuntimeConfig();
-const apiBaseUrl = config.apiBaseUrl;
+const apiBaseUrl = config.public.apiBaseUrl;
 
 async function loadJobs() {
   loading.value = true;
