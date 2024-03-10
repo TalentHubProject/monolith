@@ -171,9 +171,7 @@ function handleCreateOffer() {
   const { loggedIn } = useUserSession()
 
   if (!loggedIn.value) {
-    toast('Erreur', {
-      description: 'Vous devez être connecté pour créer une offre',
-    })
+    toast.error('Vous devez être connecté pour créer une offre');
   }
 }
 
