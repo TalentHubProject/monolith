@@ -82,7 +82,7 @@ async function handleCreateOffer() {
       offerDomain.value = 'dev';
       await loadJobs();
     } else {
-      toast.error('Une erreur est survenue lors de la création de l\'offre');
+      toast.error('Vous devez patienter 3h avant de créer une nouvelle offre');
     }
   } catch (error) {
     console.error("Error creating offer", error);
