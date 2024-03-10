@@ -1,4 +1,6 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
+import {process} from "std-env";
+
 export default defineNuxtConfig({
   devtools: { enabled: true },
   css: [
@@ -20,6 +22,9 @@ export default defineNuxtConfig({
     'nuxt-lucide-icons',
     'nuxt-auth-utils'
   ],
+  runtimeConfig: {
+    apiBaseUrl: process.env.API_BASE_URL,
+  },
   shadcn: {
     prefix: '',
     componentDir: './components/ui'

@@ -1,22 +1,29 @@
 <script lang="ts" setup>
 import {toast} from "vue-sonner";
-import axios from "axios";
 
 const visibleJobs = ref([]);
 const loading = ref(false);
 const allJobsLoaded = ref(false);
-const jobsPerPage = 6;
 const searchQuery = ref('');
 const selectedDomain = ref('');
 
+const config = useRuntimeConfig();
+const apiBaseUrl = config.apiBaseUrl;
+
 async function loadJobs() {
   loading.value = true;
-
   try {
-    const response = await axios.get(`${process.env.API_BASE_URL}/missions`);
-    visibleJobs.value = response.data;
+    const { data: missions } = await useFetch(`${apiBaseUrl}/missions`);
+
+    if (missions.value) {
+      visibleJobs.value = missions.value;
+      allJobsLoaded.value = true;
+    } else {
+      visibleJobs.value = [];
+    }
   } catch (error) {
     toast.error('Une erreur est survenue lors du chargement des offres');
+    visibleJobs.value = [];
   }
 
   loading.value = false;
@@ -31,19 +38,8 @@ function filterJobs() {
 
 watch([searchQuery, selectedDomain], filterJobs);
 
-function loadMoreJobs() {
-  loading.value = true;
-  const start = visibleJobs.value.length;
-  const end = start + jobsPerPage;
-  visibleJobs.value.push(...jobs.slice(start, end));
-  loading.value = false;
-  if (visibleJobs.value.length === jobs.length) {
-    allJobsLoaded.value = true;
-  }
-}
-
 function handleCreateOffer() {
-  const { loggedIn } = useUserSession()
+  const {loggedIn} = useUserSession()
 
   if (!loggedIn.value) {
     toast.error('Vous devez être connecté pour créer une offre');
@@ -51,7 +47,7 @@ function handleCreateOffer() {
 }
 
 onMounted(() => {
-  loadMoreJobs();
+  loadJobs();
 });
 
 useSeoMeta({
@@ -62,7 +58,7 @@ useSeoMeta({
 </script>
 
 <template>
-  <section class="min-h-screen flex flex-col justify-center items-center px-4 md:px-8 lg:px-16 mt-12">
+  <section class="min-h-screen flex flex-col justify-center items-center px-4 md:px-8 lg:px-16 md:mt-12">
     <header class="mb-12 flex flex-col items-center gap-y-10 mb-12">
       <div class="px-4 py-1 rounded bg-gray-100">
         <LucideActivity class="float-left pt-1 pr-2"/>
@@ -94,34 +90,28 @@ useSeoMeta({
       </button>
     </div>
 
-    <div v-if="jobs.length === 0" class="text-gray-700 text-center">Il n'y a aucune offre pour le moment.</div>
-
-    <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-      <div
-          v-for="job in visibleJobs"
-          :key="job.id"
-          class="bg-white shadow-md rounded-lg p-6 transition duration-300 hover:shadow-lg"
-      >
-        <h2 class="text-xl font-bold text-gray-800">{{ job.title }}</h2>
-        <p class="text-gray-600 text-sm mb-4">{{ job.company }} - {{ job.location }}</p>
-        <p class="text-gray-700 mb-4">{{ job.description }}</p>
-        <p class="text-gray-700 font-bold">{{ job.salary }}</p>
-      </div>
-    </div>
-
     <div v-if="loading" class="mt-8">
       <div class="flex justify-center items-center">
         <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
       </div>
     </div>
 
-    <div v-if="!loading && !allJobsLoaded" class="mt-8">
-      <button
-          class="bg-gray-800 text-white px-6 py-3 rounded-md hover:bg-gray-700 transition duration-300"
-          @click="loadMoreJobs"
-      >
-        Charger plus d'offres
-      </button>
+    <div v-else>
+      <div v-if="visibleJobs.length === 0" class="text-gray-700 text-center">
+        Il n'y a pas d'offres pour le moment
+      </div>
+      <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div
+            v-for="job in visibleJobs"
+            :key="job?.id"
+            class="bg-white shadow-md rounded-lg p-6 transition duration-300 hover:shadow-lg"
+        >
+          <h2 class="text-xl font-bold text-gray-800">{{ job?.name }}</h2>
+          <p class="text-gray-600 text-sm mb-4">{{ job?.employerName }}</p>
+          <p class="text-gray-700 mb-4">{{ job?.description }}</p>
+          <p class="text-gray-700 font-bold">{{ job?.budget }}</p>
+        </div>
+      </div>
     </div>
   </section>
 </template>
