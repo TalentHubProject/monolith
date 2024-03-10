@@ -3,6 +3,7 @@
         <Navbar/>
         <slot/>
         <SpeedInsights/>
+        <Toaster />
         <Footer/>
     </main>
 </template>

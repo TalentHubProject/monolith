@@ -1,5 +1,9 @@
 lockfileVersion: '6.0'
 
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
+
 overrides:
   string-width: 4.2.3
 
@@ -46,6 +50,9 @@ dependencies:
   vue-loader-v16:
     specifier: npm:vue-loader@16.0.0-beta.7
     version: /vue-loader@16.0.0-beta.7
+  vue-sonner:
+    specifier: ^1.1.2
+    version: 1.1.2
 
 devDependencies:
   '@nuxtjs/axios':
@@ -526,6 +533,7 @@ packages:
 
   /@emotion/memoize@0.7.4:
     resolution: {integrity: sha512-Ja/Vfqe3HpuzRsG1oBtWTHk2PGZ7GR+2Vz5iYGelAw8dx32K0y7PjVuxK6z1nMpZOqAFsRUPCkK1YjJ56qJlgw==}
+    requiresBuild: true
     dev: false
     optional: true
 
@@ -5324,6 +5332,7 @@ packages:
   /iconv-lite@0.6.3:
     resolution: {integrity: sha512-4fCk79wshMdzMp2rH06qWrJE4iolqLhCUH+OiuIgU++RB0+94NlDL81atO7GX55uUKueo0txHNtvEyI6D7WdMw==}
     engines: {node: '>=0.10.0'}
+    requiresBuild: true
     dependencies:
       safer-buffer: 2.1.2
     dev: true
@@ -9711,6 +9720,10 @@ packages:
       serialize-javascript: 6.0.2
       source-map: 0.5.6
     dev: true
+
+  /vue-sonner@1.1.2:
+    resolution: {integrity: sha512-yg4f5s0a3oiiI7cNvO0Dajux1Y7s04lxww3vnQtnwQawJ3KqaKA9RIRMdI9wGTosRGIOwgYFniFRGl4+IuKPZw==}
+    dev: false
 
   /vue-svg-loader@0.16.0(vue-template-compiler@2.7.16):
     resolution: {integrity: sha512-2RtFXlTCYWm8YAEO2qAOZ2SuIF2NvLutB5muc3KDYoZq5ZeCHf8ggzSan3ksbbca7CJ/Aw57ZnDF4B7W/AkGtw==}

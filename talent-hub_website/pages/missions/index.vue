@@ -1,4 +1,6 @@
 <script lang="ts" setup>
+import {toast} from "vue-sonner";
+
 const jobs = [
   {
     id: 1,
@@ -165,9 +167,25 @@ function loadMoreJobs() {
   }
 }
 
+function handleCreateOffer() {
+  const { loggedIn } = useUserSession()
+
+  if (!loggedIn.value) {
+    toast('Erreur', {
+      description: 'Vous devez être connecté pour créer une offre',
+    })
+  }
+}
+
 onMounted(() => {
   loadMoreJobs();
 });
+
+useSeoMeta({
+  title: 'Talent Hub - Offres',
+  description: 'Retrouvez toutes les offres disponibles sur Talent Hub',
+});
+
 </script>
 
 <template>
@@ -196,8 +214,10 @@ onMounted(() => {
       </div>
     </header>
     <div class="w-full flex justify-start md:justify-end my-5">
-      <button class="bg-gray-800 text-white px-6 py-3 rounded-md hover:bg-gray-700 transition duration-300">Créer une
-        offre
+      <button
+          class="bg-gray-800 text-white px-6 py-3 rounded-md hover:bg-gray-700 transition duration-300"
+          @click="handleCreateOffer">
+        Créer une offre
       </button>
     </div>
 
