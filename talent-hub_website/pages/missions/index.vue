@@ -126,15 +126,17 @@ useSeoMeta({
       </div>
     </header>
     <div class="w-full flex justify-start md:justify-end my-5">
+      <span v-if="!loggedIn" class="text-red-500 text-sm">Vous devez être connecté pour créer une offre</span>
       <Drawer>
 
         <DrawerTrigger>
-          <button
-              class="bg-gray-800 text-white px-6 py-3 rounded-md hover:bg-gray-700 transition duration-300"
-              :disabled="!loggedIn"
-              >
-            Créer une offre
-          </button>
+            <Button
+                class="bg-gray-800 text-white px-6 py-3 rounded-md transition duration-300"
+                :class="{ 'opacity-50 cursor-not-allowed': !loggedIn, 'hover:bg-gray-700': loggedIn }"
+                :disabled="!loggedIn"
+            >
+              Créer une offre
+            </Button>
         </DrawerTrigger>
         <DrawerContent class="bg-white">
           <DrawerHeader>
@@ -164,7 +166,12 @@ useSeoMeta({
               </select></div>
           </form>
           <DrawerFooter>
-            <Button @click="handleCreateOffer">Créer</Button>
+            <Button
+                @click="handleCreateOffer"
+                class="bg-gray-800 text-white px-6 py-3 rounded-md transition duration-300"
+                >
+              Créer
+            </Button>
             <DrawerClose>
               <Button variant="outline">
                 Annuler
