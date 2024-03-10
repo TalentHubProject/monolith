@@ -106,15 +106,20 @@ class MissionResource @Inject constructor(
                             "inline": true
                         },
                         {
-                            "name": "📅 Deadline",
-                            "value": "${mission.deadline}",
+                            "name": "📝 Description",
+                            "value": "${mission.description.substring(0, min(255, mission.description.length))}${if (mission.description.length > 255) "..." else ""}",
                             "inline": true
                         },
                         {
                             "name": "🙎Contacter",
                             "value": "<@${mission.employerSnowflake}>",
                             "inline": false
-                        }
+                        },
+                        {
+                            "name": "📅 Deadline",
+                            "value": "${mission.deadline}",
+                            "inline": true
+                        },
                     ],
                     "color": 3092790
                 }
