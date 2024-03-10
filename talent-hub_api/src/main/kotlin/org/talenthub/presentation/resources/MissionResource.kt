@@ -13,6 +13,7 @@ import org.talenthub.infrastructure.persistence.repository.MissionRepository
 import org.talenthub.infrastructure.persistence.service.MissionService
 import org.talenthub.infrastructure.persistence.service.Result
 import java.net.http.HttpClient
+import kotlin.math.min
 
 @Path("/missions")
 class MissionResource @Inject constructor(
