@@ -15,7 +15,7 @@ services:
       - api_rabbitmq
     networks:
       - th-dev_net
-      - bridge-delegate
+      - bridge_delegate
 
   api_mongo:
     image: "mongo:4.4"
