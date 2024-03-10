@@ -36,6 +36,7 @@ services:
     build:
       context: talent-hub-aleks_bot
       dockerfile: dev.Dockerfile
+    restart: unless-stopped
     ports:
       - "5001:5107"
     env_file:
