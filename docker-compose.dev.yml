@@ -5,7 +5,7 @@ services:
   api:
     image: quarkus/talent-hub_api-jvm
     ports:
-      - "8080:8080"
+      - "8081:8080"
     restart: unless-stopped
     volumes:
       - ./talent-hub_api:/app
