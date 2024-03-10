@@ -1,143 +1,6 @@
 <script lang="ts" setup>
 import {toast} from "vue-sonner";
-
-const jobs = [
-  {
-    id: 1,
-    title: 'Développeur Front-end',
-    company: 'Entreprise A',
-    location: 'Paris',
-    salary: '50k - 60k',
-    description: 'Nous recherchons un développeur Front-end expérimenté pour rejoindre notre équipe...',
-  },
-  {
-    id: 2,
-    title: 'Designer UX/UI',
-    company: 'Entreprise B',
-    location: 'Lyon',
-    salary: '40k - 50k',
-    description: 'Nous sommes à la recherche d\'un designer UX/UI talentueux pour créer des interfaces utilisateur intuitives...',
-  },
-  {
-    id: 3,
-    title: 'Développeur Full-stack',
-    company: 'Entreprise C',
-    location: 'Toulouse',
-    salary: '60k - 70k',
-    description: 'Nous recherchons un développeur Full-stack pour rejoindre notre équipe et travailler sur des projets passionnants...',
-  },
-  {
-    id: 1,
-    title: 'Développeur Front-end',
-    company: 'Entreprise A',
-    location: 'Paris',
-    salary: '50k - 60k',
-    description: 'Nous recherchons un développeur Front-end expérimenté pour rejoindre notre équipe...',
-  },
-  {
-    id: 1,
-    title: 'Développeur Front-end',
-    company: 'Entreprise A',
-    location: 'Paris',
-    salary: '50k - 60k',
-    description: 'Nous recherchons un développeur Front-end expérimenté pour rejoindre notre équipe...',
-  },
-  {
-    id: 1,
-    title: 'Développeur Front-end',
-    company: 'Entreprise A',
-    location: 'Paris',
-    salary: '50k - 60k',
-    description: 'Nous recherchons un développeur Front-end expérimenté pour rejoindre notre équipe...',
-  },
-  {
-    id: 1,
-    title: 'Développeur Front-end',
-    company: 'Entreprise A',
-    location: 'Paris',
-    salary: '50k - 60k',
-    description: 'Nous recherchons un développeur Front-end expérimenté pour rejoindre notre équipe...',
-  },
-  {
-    id: 1,
-    title: 'Développeur Front-end',
-    company: 'Entreprise A',
-    location: 'Paris',
-    salary: '50k - 60k',
-    description: 'Nous recherchons un développeur Front-end expérimenté pour rejoindre notre équipe...',
-  }, {
-    id: 1,
-    title: 'Développeur Front-end',
-    company: 'Entreprise A',
-    location: 'Paris',
-    salary: '50k - 60k',
-    description: 'Nous recherchons un développeur Front-end expérimenté pour rejoindre notre équipe...',
-  },
-  {
-    id: 1,
-    title: 'Développeur Front-end',
-    company: 'Entreprise A',
-    location: 'Paris',
-    salary: '50k - 60k',
-    description: 'Nous recherchons un développeur Front-end expérimenté pour rejoindre notre équipe...',
-  },
-  {
-    id: 1,
-    title: 'Développeur Front-end',
-    company: 'Entreprise A',
-    location: 'Paris',
-    salary: '50k - 60k',
-    description: 'Nous recherchons un développeur Front-end expérimenté pour rejoindre notre équipe...',
-  },
-  {
-    id: 1,
-    title: 'Développeur Front-end',
-    company: 'Entreprise A',
-    location: 'Paris',
-    salary: '50k - 60k',
-    description: 'Nous recherchons un développeur Front-end expérimenté pour rejoindre notre équipe...',
-  },
-  {
-    id: 1,
-    title: 'Développeur Front-end',
-    company: 'Entreprise A',
-    location: 'Paris',
-    salary: '50k - 60k',
-    description: 'Nous recherchons un développeur Front-end expérimenté pour rejoindre notre équipe...',
-  },
-  {
-    id: 1,
-    title: 'Développeur Front-end',
-    company: 'Entreprise A',
-    location: 'Paris',
-    salary: '50k - 60k',
-    description: 'Nous recherchons un développeur Front-end expérimenté pour rejoindre notre équipe...',
-  },
-  {
-    id: 1,
-    title: 'Développeur Front-end',
-    company: 'Entreprise A',
-    location: 'Paris',
-    salary: '50k - 60k',
-    description: 'Nous recherchons un développeur Front-end expérimenté pour rejoindre notre équipe...',
-  },
-  {
-    id: 1,
-    title: 'Développeur Front-end',
-    company: 'Entreprise A',
-    location: 'Paris',
-    salary: '50k - 60k',
-    description: 'Nous recherchons un développeur Front-end expérimenté pour rejoindre notre équipe...',
-  },
-  {
-    id: 1,
-    title: 'Développeur Front-end',
-    company: 'Entreprise A',
-    location: 'Paris',
-    salary: '50k - 60k',
-    description: 'Nous recherchons un développeur Front-end expérimenté pour rejoindre notre équipe...',
-  },
-]
+import axios from "axios";
 
 const visibleJobs = ref([]);
 const loading = ref(false);
@@ -146,12 +9,24 @@ const jobsPerPage = 6;
 const searchQuery = ref('');
 const selectedDomain = ref('');
 
+async function loadJobs() {
+  loading.value = true;
+
+  try {
+    const response = await axios.get(`${process.env.API_BASE_URL}/missions`);
+    visibleJobs.value = response.data;
+  } catch (error) {
+    toast.error('Une erreur est survenue lors du chargement des offres');
+  }
+
+  loading.value = false;
+}
+
 function filterJobs() {
-  visibleJobs.value = jobs.filter(job => {
+  visibleJobs.value = visibleJobs.value.filter(job => {
     return job.title.toLowerCase().includes(searchQuery.value.toLowerCase()) &&
         (selectedDomain.value === '' || job.domain === selectedDomain.value);
   });
-  allJobsLoaded.value = visibleJobs.value.length === jobs.length;
 }
 
 watch([searchQuery, selectedDomain], filterJobs);
