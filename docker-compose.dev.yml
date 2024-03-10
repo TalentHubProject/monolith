@@ -15,6 +15,7 @@ services:
       - api_rabbitmq
     networks:
       - th-dev_net
+      - bridge-delegate
 
   api_mongo:
     image: "mongo:4.4"
@@ -63,3 +64,5 @@ services:
 networks:
   th-dev_net:
     driver: bridge
+  bridge-delegate:
+    external: true
