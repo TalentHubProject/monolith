@@ -64,5 +64,5 @@ services:
 networks:
   th-dev_net:
     driver: bridge
-  bridge-delegate:
+  bridge_delegate:
     external: true
