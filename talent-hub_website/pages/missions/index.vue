@@ -200,7 +200,7 @@ useSeoMeta({
         >
           <h2 class="text-xl font-bold text-gray-800">{{ job?.name }}</h2>
           <p class="text-gray-600 text-sm mb-4">Contacter <span class="font-bold underline">@{{ job?.employerName }}</span></p>
-          <p class="text-gray-700 mb-4">{{ job?.description }}</p>
+          <p class="text-gray-700 text-wrap text-elipsis">{{ job?.description }}</p>
           <p class="text-gray-700 font-bold">{{ job?.budget }}€</p>
         </div>
       </div>
