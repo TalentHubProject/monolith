@@ -1,7 +1,7 @@
 package org.talenthub.infrastructure.persistence.entity
 
 import io.quarkus.mongodb.panache.reactive.ReactivePanacheMongoEntity
-import java.time.LocalDate
+import java.time.LocalDateTime
 
 data class Mission(
     var name: String,
@@ -12,11 +12,11 @@ data class Mission(
     var status: String,
     var employerSnowflake: String,
     var employerName: String,
-    var createdAt: LocalDate? = LocalDate.now(),
-    var updatedAt: LocalDate? = LocalDate.now(),
+    var createdAt: LocalDateTime? = LocalDateTime.now(),
+    var updatedAt: LocalDateTime? = LocalDateTime.now(),
 
 
     ) : ReactivePanacheMongoEntity() {
     constructor()
-            : this("", "", 0, "", "", "", "", "", LocalDate.now(), LocalDate.now())
+            : this("", "", 0, "", "", "", "", "", LocalDateTime.now(), LocalDateTime.now())
 }

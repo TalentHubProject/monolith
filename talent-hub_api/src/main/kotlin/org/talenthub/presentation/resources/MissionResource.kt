@@ -10,12 +10,15 @@ import org.eclipse.microprofile.config.inject.ConfigProperty
 import org.jboss.logging.Logger
 import org.talenthub.infrastructure.persistence.entity.Mission
 import org.talenthub.infrastructure.persistence.repository.MissionRepository
+import org.talenthub.infrastructure.persistence.service.MissionService
+import org.talenthub.infrastructure.persistence.service.Result
 import java.net.http.HttpClient
 
 @Path("/missions")
 class MissionResource @Inject constructor(
     private val _missionRepository: MissionRepository,
-    private val _logger: Logger
+    private val _logger: Logger,
+    private val _missionService: MissionService
 ) {
 
     @ConfigProperty(name = "discord.jobs.dev.webhook")
@@ -30,14 +33,12 @@ class MissionResource @Inject constructor(
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     fun getAllMissions(): Uni<Response> {
-        return _missionRepository.listAll()
-            .map { missions ->
-                Response.ok(missions).build()
-            }
-            .onFailure().recoverWithItem { throwable ->
-                _logger.error("Failed to retrieve missions", throwable)
-                Response.status(Response.Status.INTERNAL_SERVER_ERROR).build()
-            }
+        return _missionRepository.listAll().map { missions ->
+            Response.ok(missions).build()
+        }.onFailure().recoverWithItem { throwable ->
+            _logger.error("Failed to retrieve missions", throwable)
+            Response.status(Response.Status.INTERNAL_SERVER_ERROR).build()
+        }
     }
 
 
@@ -48,15 +49,13 @@ class MissionResource @Inject constructor(
         return try {
             val objectId = ObjectId(id)
 
-            _missionRepository.findById(objectId)
-                .map { mission ->
-                    if (mission != null) {
-                        Response.ok(mission).build()
-                    } else {
-                        Response.status(Response.Status.NOT_FOUND).build()
-                    }
+            _missionRepository.findById(objectId).map { mission ->
+                if (mission != null) {
+                    Response.ok(mission).build()
+                } else {
+                    Response.status(Response.Status.NOT_FOUND).build()
                 }
-                .onFailure().recoverWithItem(Response.status(Response.Status.INTERNAL_SERVER_ERROR).build())
+            }.onFailure().recoverWithItem(Response.status(Response.Status.INTERNAL_SERVER_ERROR).build())
 
         } catch (e: IllegalArgumentException) {
             Uni.createFrom().item(Response.status(Response.Status.BAD_REQUEST).build())
@@ -67,65 +66,78 @@ class MissionResource @Inject constructor(
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     fun createMission(mission: Mission): Uni<Response> {
-        return _missionRepository.persist(mission)
-            .map { createdMission ->
-
-                val payload = """
-                    {
-                        "embeds": [
-                            {
-                                "title": "🐡 Aleks vous apporte une nouvelle mission !",
-                                "description": "${createdMission.name}",
-                                "fields": [
-                                    {
-                                        "name": "💰 Budget",
-                                        "value": "${createdMission.budget}€",
-                                        "inline": true
-                                    },
-                                    {
-                                        "name": "📅 Deadline",
-                                        "value": "${createdMission.deadline}",
-                                        "inline": true
-                                    },
-                                    {
-                                        "name": "🙎Auteur",
-                                        "value": "<@${createdMission.employerSnowflake}>",
-                                        "inline": false
-                                    }
-                                ],
-                                "color": 3092790
-                            }
-                        ]
+        return _missionService.createMission(mission)
+            .onItem().transform { result ->
+                when (result) {
+                    is Result.Success -> {
+                        val createdMission = result.data
+                        sendMissionCreatedWebhook(createdMission)
+                        Response.status(Response.Status.CREATED).entity(createdMission).build()
                     }
-                """.trimIndent()
-
-                val webhookUrl = when (createdMission.domain) {
-                    "dev" -> devWebhookUrl
-                    "art" -> artWebhookUrl
-                    "audiovisual" -> audioVisualWebhookUrl
-                    else -> devWebhookUrl
+                    is Result.Error -> {
+                        Response.status(Response.Status.BAD_REQUEST).entity(result.message).build()
+                    }
                 }
-
-                try {
-                    HttpClient.newHttpClient()
-                        .sendAsync(
-                            java.net.http.HttpRequest.newBuilder()
-                                .uri(java.net.URI.create(webhookUrl))
-                                .header("Content-Type", "application/json")
-                                .POST(java.net.http.HttpRequest.BodyPublishers.ofString(payload))
-                                .build(),
-                            java.net.http.HttpResponse.BodyHandlers.ofString()
-                        )
-                        .join()
-
-                } catch (e: Exception) {
-                    _logger.error("Failed to send webhook", e)
-                }
-
-                Response.status(Response.Status.CREATED)
-                    .entity(createdMission)
-                    .build()
             }
-            .onFailure().recoverWithItem(Response.status(Response.Status.INTERNAL_SERVER_ERROR).build())
+    }
+
+    private fun sendMissionCreatedWebhook(mission: Mission) {
+        val payload = createMissionWebhookPayload(mission)
+        val webhookUrl = getWebhookUrlForDomain(mission.domain)
+
+        try {
+            sendWebhookRequest(webhookUrl, payload)
+        } catch (e: Exception) {
+            _logger.error("Failed to send webhook", e)
+        }
+    }
+
+    private fun createMissionWebhookPayload(mission: Mission): String {
+        return """
+        {
+            "embeds": [
+                {
+                    "title": "🐡 Aleks vous apporte une nouvelle mission !",
+                    "description": "${mission.name}",
+                    "fields": [
+                        {
+                            "name": "💰 Budget",
+                            "value": "${mission.budget}€",
+                            "inline": true
+                        },
+                        {
+                            "name": "📅 Deadline",
+                            "value": "${mission.deadline}",
+                            "inline": true
+                        },
+                        {
+                            "name": "🙎Contacter",
+                            "value": "<@${mission.employerSnowflake}>",
+                            "inline": false
+                        }
+                    ],
+                    "color": 3092790
+                }
+            ]
+        }
+    """.trimIndent()
+    }
+
+    private fun getWebhookUrlForDomain(domain: String): String {
+        return when (domain) {
+            "dev" -> devWebhookUrl
+            "art" -> artWebhookUrl
+            "audiovisual" -> audioVisualWebhookUrl
+            else -> devWebhookUrl
+        }
+    }
+
+    private fun sendWebhookRequest(webhookUrl: String, payload: String) {
+        HttpClient.newHttpClient().sendAsync(
+            java.net.http.HttpRequest.newBuilder().uri(java.net.URI.create(webhookUrl))
+                .header("Content-Type", "application/json")
+                .POST(java.net.http.HttpRequest.BodyPublishers.ofString(payload)).build(),
+            java.net.http.HttpResponse.BodyHandlers.ofString()
+        ).join()
     }
 }
