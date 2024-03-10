@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import {toast} from "vue-sonner";
 
+
 const visibleJobs = ref([]);
 const loading = ref(false);
 const allJobsLoaded = ref(false);
@@ -39,12 +40,53 @@ function filterJobs() {
 }
 
 watch([searchQuery, selectedDomain], filterJobs);
+const {loggedIn, user} = useUserSession();
 
-function handleCreateOffer() {
-  const {loggedIn} = useUserSession()
+const offerName = ref('');
+const offerDescription = ref('');
+const offerBudget = ref(0);
+const offerDomain = ref('dev');
+
+async function handleCreateOffer() {
 
   if (!loggedIn.value) {
     toast.error('Vous devez être connecté pour créer une offre');
+    return;
+  }
+
+  const offerData = {
+    name: offerName.value,
+    description: offerDescription.value,
+    budget: offerBudget.value,
+    deadline: "2024-06-30",
+    status: "Ouvert",
+    employerSnowflake: user.value.id,
+    employerName: user.value.username,
+    domain: offerDomain.value
+  };
+
+  try {
+    const response = await fetch(`${apiBaseUrl}/missions`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(offerData)
+    });
+
+    if (response.ok) {
+      toast.success('L\'offre a été créée avec succès');
+      offerName.value = '';
+      offerDescription.value = '';
+      offerBudget.value = 0;
+      offerDomain.value = 'dev';
+      await loadJobs();
+    } else {
+      toast.error('Une erreur est survenue lors de la création de l\'offre');
+    }
+  } catch (error) {
+    console.error("Error creating offer", error);
+    toast.error('Une erreur est survenue lors de la création de l\'offre');
   }
 }
 
@@ -78,18 +120,59 @@ useSeoMeta({
             class="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:border-gray-500 transition duration-300">
           <option value="">Tous les domaines</option>
           <option value="dev">Développement</option>
-          <option value="design">Design</option>
-          <option value="marketing">Marketing</option>
-          <option value="finance">Finance</option>
+          <option value="art">Arts (Illustration, Logo, etc.)</option>
+          <option value="audiovisual">Audiovisuels (Photographie, Montage, etc.)</option>
         </select>
       </div>
     </header>
     <div class="w-full flex justify-start md:justify-end my-5">
-      <button
-          class="bg-gray-800 text-white px-6 py-3 rounded-md hover:bg-gray-700 transition duration-300"
-          @click="handleCreateOffer">
-        Créer une offre
-      </button>
+      <Drawer>
+
+        <DrawerTrigger>
+          <button
+              class="bg-gray-800 text-white px-6 py-3 rounded-md hover:bg-gray-700 transition duration-300"
+              :disabled="!loggedIn"
+              >
+            Créer une offre
+          </button>
+        </DrawerTrigger>
+        <DrawerContent class="bg-white">
+          <DrawerHeader>
+            <DrawerTitle>Créer une offre</DrawerTitle>
+            <DrawerDescription>Créez une offre pour trouver le talent qu'il vous faut</DrawerDescription>
+          </DrawerHeader>
+          <form class="p-6">
+            <div class="mb-4"><label class="block text-gray-700 text-sm font-bold mb-2" for="name">Nom de
+              l'offre</label> <input id="name" v-model="offerName" class="w-full px-3 py-2 border rounded-md border-gray-300 focus:outline-none focus:border-gray-500 transition duration-300"
+                                     placeholder="Nom de l'offre"
+                                     type="text"/></div>
+            <div class="mb-4"><label class="block text-gray-700 text-sm font-bold mb-2"
+                                     for="description">Description</label> <textarea
+                id="description" v-model="offerDescription"
+                class="w-full px-3 py-2 border rounded-md border-gray-300 focus:outline-none focus:border-gray-500 transition duration-300"
+                placeholder="Description de l'offre"></textarea></div>
+            <div class="mb-4"><label class="block text-gray-700 text-sm font-bold mb-2" for="budget">Budget</label>
+              <input id="budget" v-model="offerBudget" class="w-full px-3 py-2 border rounded-md border-gray-300 focus:outline-none focus:border-gray-500 transition duration-300"
+                     placeholder="Budget"
+                     type="number"/></div>
+            <div class="mb-4"><label class="block text-gray-700 text-sm font-bold mb-2" for="domain">Domaine</label>
+              <select id="domain" v-model="offerDomain"
+                      class="w-full px-3 py-2 border rounded-md border-gray-300 focus:outline-none focus:border-gray-500 transition duration-300">
+                <option value="dev">Développement</option>
+                <option value="art">Arts (Illustration, Logo, etc.)</option>
+                <option value="audiovisual">Audiovisuels (Photographie, Montage, etc.)</option>
+              </select></div>
+          </form>
+          <DrawerFooter>
+            <Button @click="handleCreateOffer">Créer</Button>
+            <DrawerClose>
+              <Button variant="outline">
+                Annuler
+              </Button>
+            </DrawerClose>
+          </DrawerFooter>
+        </DrawerContent>
+      </Drawer>
     </div>
 
     <div v-if="loading" class="mt-8">
