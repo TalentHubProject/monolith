@@ -108,7 +108,7 @@ class MissionResource @Inject constructor(
                         },
                         {
                             "name": "📝 Description",
-                            "value": "${mission.description.substring(0, min(255, mission.description.length))}${if (mission.description.length > 255) "..." else ""}",
+                            "value": "${mission.description.substring(0, minOf(255, mission.description.length))}${if (mission.description.length > 255) "..." else ""}",
                             "inline": true
                         },
                         {
@@ -120,13 +120,13 @@ class MissionResource @Inject constructor(
                             "name": "📅 Deadline",
                             "value": "${mission.deadline}",
                             "inline": true
-                        },
+                        }
                     ],
                     "color": 3092790
                 }
             ]
         }
-    """.trimIndent()
+        """.trimIndent()
     }
 
     private fun getWebhookUrlForDomain(domain: String): String {
