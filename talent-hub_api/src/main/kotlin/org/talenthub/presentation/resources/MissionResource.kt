@@ -18,8 +18,14 @@ class MissionResource @Inject constructor(
     private val _logger: Logger
 ) {
 
-    @ConfigProperty(name = "discord.jobs.webhook")
-    lateinit var webhookUrl: String
+    @ConfigProperty(name = "discord.jobs.dev.webhook")
+    lateinit var devWebhookUrl: String
+
+    @ConfigProperty(name = "discord.jobs.art.webhook")
+    lateinit var artWebhookUrl: String
+
+    @ConfigProperty(name = "discord.jobs.audiovisual.webhook")
+    lateinit var audioVisualWebhookUrl: String
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -64,19 +70,41 @@ class MissionResource @Inject constructor(
         return _missionRepository.persist(mission)
             .map { createdMission ->
 
-                _logger.info("Webhook : $webhookUrl")
-
                 val payload = """
                     {
-                        "content": "New mission created",
                         "embeds": [
                             {
-                                "title": "New mission created",
-                                "description": "A new mission has been created with the following details: ${createdMission.name}, ${createdMission.description}"
+                                "title": "🐡 Aleks vous apporte une nouvelle mission !",
+                                "description": "${createdMission.name}",
+                                "fields": [
+                                    {
+                                        "name": "💰 Budget",
+                                        "value": "${createdMission.budget}€",
+                                        "inline": true
+                                    },
+                                    {
+                                        "name": "📅 Deadline",
+                                        "value": "${createdMission.deadline}",
+                                        "inline": true
+                                    },
+                                    {
+                                        "name": "🙎Auteur",
+                                        "value": "<@${createdMission.employerSnowflake}>",
+                                        "inline": false
+                                    }
+                                ],
+                                "color": 3092790
                             }
                         ]
                     }
                 """.trimIndent()
+
+                val webhookUrl = when (createdMission.domain) {
+                    "dev" -> devWebhookUrl
+                    "art" -> artWebhookUrl
+                    "audiovisual" -> audioVisualWebhookUrl
+                    else -> devWebhookUrl
+                }
 
                 try {
                     HttpClient.newHttpClient()

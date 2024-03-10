@@ -8,6 +8,7 @@ data class Mission(
     var description: String,
     var budget: Int,
     var deadline: String,
+    var domain: String,
     var status: String,
     var employerSnowflake: String,
     var createdAt: LocalDate? = LocalDate.now(),
@@ -16,5 +17,5 @@ data class Mission(
 
     ) : ReactivePanacheMongoEntity() {
     constructor()
-            : this("", "", 0, "", "", "", LocalDate.now(), LocalDate.now())
+            : this("", "", 0, "", "", "", "", LocalDate.now(), LocalDate.now())
 }
