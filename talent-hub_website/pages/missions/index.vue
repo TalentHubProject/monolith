@@ -34,8 +34,9 @@ async function loadJobs() {
 
 function filterJobs() {
   visibleJobs.value = visibleJobs.value.filter(job => {
-    return job.title.toLowerCase().includes(searchQuery.value.toLowerCase()) &&
-        (selectedDomain.value === '' || job.domain === selectedDomain.value);
+    const searchQueryMatch = job.name.toLowerCase().includes(searchQuery.value.toLowerCase());
+    const domainMatch = selectedDomain.value === '' || job.domain === selectedDomain.value;
+    return searchQueryMatch && domainMatch;
   });
 }
 
