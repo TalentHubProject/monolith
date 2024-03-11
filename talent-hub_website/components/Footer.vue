@@ -22,10 +22,10 @@
                     </div>
                     <div class="grid grid-cols-1 gap-8 sm:gap-20 sm:grid-cols-3 pb-16">
                         <div>
-                            <h2 class="mb-6 text-xl font-semibold text-gray-900 truncate mt-16 sm:mt-0">Routes</h2>
+                            <h2 class="mb-6 text-xl font-semibold text-gray-900 truncate mt-16 sm:mt-0">Liens utiles</h2>
                             <ul class="text-gray-500 dark:text-gray-400 font-medium">
                                 <li class="mb-8 sm:mb-4 ">
-                                    <a href="/" target="_blank" class="hover:underline">Acceuil</a>
+                                    <a href="/" target="_blank" class="hover:underline">Accueil</a>
                                 </li>
                                 <li class="mb-8 sm:mb-4 ">
                                     <a href="https://discord.gg/pWuYR6SYVF" target="_blank" class="hover:underline">Discord</a>
