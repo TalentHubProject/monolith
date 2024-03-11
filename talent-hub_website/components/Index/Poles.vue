@@ -63,7 +63,7 @@
           <img class="ml-auto" src="~/assets/images/reading-side.png"/>
           <h3 class="pl-4 text-sm font-bold">Dessin</h3>
           <p class="ml-4 w-60 pb-4 font-normal text-sm">
-            Tu es dessinateur.se ou fan de ce domaine? Tu es au bon endroit !
+            Tu es dessinat(eur.rice) ou fan de ce domaine? Tu es au bon endroit !
           </p>
         </div>
       </div>
