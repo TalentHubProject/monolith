@@ -27,8 +27,6 @@ import java.util.concurrent.atomic.AtomicLong;
 @AllArgsConstructor
 public class StudyTimerCmd implements DBACommand {
 
-    private final ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
-
     /**
      * Execute the command
      *
@@ -50,6 +48,8 @@ public class StudyTimerCmd implements DBACommand {
         AtomicLong remainingSeconds = new AtomicLong(totalSeconds);
 
         EmbedBuilder embedBuilder = new EmbedBuilder().setTitle("⏰ Timer d'étude").setDescription("**" + title + "**\n" + description).setColor(Color.BLUE).setFooter("Temps restant : " + formatDuration(duration));
+
+        ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
 
         event.replyEmbeds(embedBuilder.build()).queue(message -> {
             executor.scheduleAtFixedRate(() -> {
