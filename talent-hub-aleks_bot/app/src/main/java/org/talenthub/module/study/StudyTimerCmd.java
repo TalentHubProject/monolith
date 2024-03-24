@@ -6,6 +6,7 @@ import fr.leonarddoo.dba.annotation.Options;
 import fr.leonarddoo.dba.element.DBACommand;
 import lombok.AllArgsConstructor;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import org.springframework.stereotype.Component;
@@ -55,11 +56,11 @@ public class StudyTimerCmd implements DBACommand {
                 remainingSeconds.getAndDecrement();
                 if (remainingSeconds.get() <= 0) {
                     embedBuilder.setColor(Color.GREEN).setFooter("Temps écoulé !").setTimestamp(message.getTimeCreated().plusSeconds(totalSeconds).toInstant());
-                    message.editMessageEmbedsById(message.getId(), embedBuilder.build()).queue();
+                    event.getHook().editOriginalEmbeds(embedBuilder.build()).queue();
                     executor.shutdown();
                 } else {
                     embedBuilder.setFooter("Temps restant : " + formatDuration(Duration.ofSeconds(remainingSeconds.get())));
-                    message.editMessageEmbedsById(message.getId(), embedBuilder.build()).queue();
+                    event.getHook().editOriginalEmbeds(embedBuilder.build()).queue();
                 }
             }, 1, 1, TimeUnit.SECONDS);
         });
