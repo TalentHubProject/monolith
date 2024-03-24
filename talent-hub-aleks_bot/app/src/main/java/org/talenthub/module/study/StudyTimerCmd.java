@@ -5,13 +5,18 @@ import fr.leonarddoo.dba.annotation.Option;
 import fr.leonarddoo.dba.annotation.Options;
 import fr.leonarddoo.dba.element.DBACommand;
 import lombok.AllArgsConstructor;
+import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import org.springframework.stereotype.Component;
 
+import java.awt.*;
 import java.time.Duration;
 import java.util.Objects;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicLong;
 
 @Command(name = "study-timer", description = "Créer un timer pour étudier.")
 @Options({@Option(type = OptionType.STRING, name = "title", description = "Titre du timer.", required = true),
@@ -20,6 +25,8 @@ import java.util.concurrent.TimeUnit;
 @Component
 @AllArgsConstructor
 public class StudyTimerCmd implements DBACommand {
+
+    private final ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
 
     /**
      * Execute the command
@@ -38,11 +45,24 @@ public class StudyTimerCmd implements DBACommand {
             return;
         }
 
-        long milliseconds = duration.toMillis();
-        event.reply("Timer créé pour étudier :\n**" + title + "**\n" + description + "\nDurée : " + formatDuration(duration))
-                .queue(message ->
-                        message.editOriginal("Timer terminé pour :\n**" + title + "**\n" + description)
-                                .queueAfter(milliseconds, TimeUnit.MILLISECONDS));
+        long totalSeconds = duration.getSeconds();
+        AtomicLong remainingSeconds = new AtomicLong(totalSeconds);
+
+        EmbedBuilder embedBuilder = new EmbedBuilder().setTitle("⏰ Timer d'étude").setDescription("**" + title + "**\n" + description).setColor(Color.BLUE).setFooter("Temps restant : " + formatDuration(duration));
+
+        event.replyEmbeds(embedBuilder.build()).queue(message -> {
+            executor.scheduleAtFixedRate(() -> {
+                remainingSeconds.getAndDecrement();
+                if (remainingSeconds.get() <= 0) {
+                    embedBuilder.setColor(Color.GREEN).setFooter("Temps écoulé !").setTimestamp(message.getTimeCreated().plusSeconds(totalSeconds).toInstant());
+                    message.editMessageEmbedsById(message.getId(), embedBuilder.build()).queue();
+                    executor.shutdown();
+                } else {
+                    embedBuilder.setFooter("Temps restant : " + formatDuration(Duration.ofSeconds(remainingSeconds.get())));
+                    message.editMessageEmbedsById(message.getId(), embedBuilder.build()).queue();
+                }
+            }, 1, 1, TimeUnit.SECONDS);
+        });
     }
 
     private Duration parseDuration(String timeString) {
@@ -57,6 +77,6 @@ public class StudyTimerCmd implements DBACommand {
         long seconds = duration.getSeconds();
         long minutes = seconds / 60;
         seconds %= 60;
-        return minutes + "m" + seconds + "s";
+        return String.format("%02d:%02d", minutes, seconds);
     }
 }
