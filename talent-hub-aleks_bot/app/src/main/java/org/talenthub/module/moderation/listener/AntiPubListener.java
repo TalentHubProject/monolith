@@ -7,6 +7,8 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.springframework.stereotype.Component;
 import org.talenthub.tools.EmbedTemplates;
 
+import java.util.concurrent.TimeUnit;
+
 @Component
 public class AntiPubListener extends ListenerAdapter {
 
@@ -26,8 +28,14 @@ public class AntiPubListener extends ListenerAdapter {
             }
         });
 
-        event.getMessage().replyEmbeds(EmbedTemplates.errorEmbed("Votre message a été supprimé car une pub a été detecté.")).queue(reply ->
-                event.getMessage().delete().queue());
+        event.getJDA()
+                .getTextChannelById("1077593471688396860")
+                .sendMessage("[PUB] L'utilisateur " + event.getAuthor().getAsTag() + " semble faire de la pub...")
+                .queue();
+
+
+        event.getMessage().replyEmbeds(EmbedTemplates.errorEmbed("Votre message a été supprimé car une pub a été detecté."))
+                .queue(message -> message.delete().queueAfter(5, TimeUnit.SECONDS));
 
     }
 }
