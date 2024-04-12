@@ -30,12 +30,17 @@ public class AntiPubListener extends ListenerAdapter {
 
         event.getJDA()
                 .getTextChannelById("1077593471688396860")
-                .sendMessage("[PUB] L'utilisateur " + event.getAuthor().getAsTag() + " semble faire de la pub...")
+                .sendMessage("[PUB] L'utilisateur " + event.getAuthor().getAsTag() + " semble faire de la pub... \n" +
+                        "Message : " + event.getMessage().getContentRaw() + "\n" +
+                        "Id : " + event.getAuthor().getId())
                 .queue();
 
 
         event.getMessage().replyEmbeds(EmbedTemplates.errorEmbed("Votre message a été supprimé car une pub a été detecté."))
-                .queue(message -> message.delete().queueAfter(5, TimeUnit.SECONDS));
+                .queue(message -> {
+                    event.getMessage().delete().queue();
+                    message.delete().queueAfter(5, TimeUnit.SECONDS);
+                });
 
     }
 }
