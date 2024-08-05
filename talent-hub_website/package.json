@@ -16,7 +16,7 @@
     "@nuxtjs/svg": "^0.4.1",
     "@nuxtjs/tailwindcss": "^6.11.4",
     "defu": "^6.1.4",
-    "nuxt": "^3.10.3",
+    "nuxt": "^3.12.4",
     "nuxt-auth-utils": "^0.0.18",
     "nuxt-lucide-icons": "^1.0.4",
     "shadcn-nuxt": "^0.9.0",
